@@ -2,72 +2,63 @@ using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-namespace UnityStandardAssets.Characters.FirstPerson
-{
+namespace UnityStandardAssets.Characters.FirstPerson {
     [RequireComponent(typeof (Rigidbody))]
     [RequireComponent(typeof (CapsuleCollider))]
-    public class RigidbodyFirstPersonController : MonoBehaviour
-    {
+    public class RigidbodyFirstPersonController : MonoBehaviour {
         [Serializable]
-        public class MovementSettings
-        {
+        public class MovementSettings {
             public float ForwardSpeed = 8.0f;   // Speed when walking forward
             public float BackwardSpeed = 4.0f;  // Speed when walking backwards
             public float StrafeSpeed = 4.0f;    // Speed when walking sideways
             public float RunMultiplier = 2.0f;   // Speed when sprinting
 	        public KeyCode RunKey = KeyCode.LeftShift;
             public float JumpForce = 30f;
-            public AnimationCurve SlopeCurveModifier = new AnimationCurve(new Keyframe(-90.0f, 1.0f), new Keyframe(0.0f, 1.0f), new Keyframe(90.0f, 0.0f));
+            public AnimationCurve SlopeCurveModifier = new AnimationCurve(
+                new Keyframe(-90.0f, 1.0f),
+                new Keyframe(0.0f, 1.0f),
+                new Keyframe(90.0f, 0.0f));
             [HideInInspector] public float CurrentTargetSpeed = 8f;
 
 #if !MOBILE_INPUT
             private bool m_Running;
 #endif
 
-            public void UpdateDesiredTargetSpeed(Vector2 input)
-            {
+            public void UpdateDesiredTargetSpeed(Vector2 input) {
 	            if (input == Vector2.zero) return;
-				if (input.x > 0 || input.x < 0)
-				{
+				if (input.x > 0 || input.x < 0) {
 					//strafe
 					CurrentTargetSpeed = StrafeSpeed;
 				}
-				if (input.y < 0)
-				{
+				if (input.y < 0) {
 					//backwards
 					CurrentTargetSpeed = BackwardSpeed;
 				}
-				if (input.y > 0)
-				{
+				if (input.y > 0) {
 					//forwards
 					//handled last as if strafing and moving forward at the same time forwards speed should take precedence
 					CurrentTargetSpeed = ForwardSpeed;
 				}
 #if !MOBILE_INPUT
-	            if (Input.GetKey(RunKey))
-	            {
+	            if (Input.GetKey(RunKey)) {
 		            CurrentTargetSpeed *= RunMultiplier;
 		            m_Running = true;
 	            }
-	            else
-	            {
+	            else {
 		            m_Running = false;
 	            }
 #endif
             }
 
 #if !MOBILE_INPUT
-            public bool Running
-            {
+            public bool Running {
                 get { return m_Running; }
             }
 #endif
         }
 
-
         [Serializable]
-        public class AdvancedSettings
-        {
+        public class AdvancedSettings {
             public float groundCheckDistance = 0.01f; // distance for checking if the controller is grounded ( 0.01f seems to work best for this )
             public float stickToGroundHelperDistance = 0.5f; // stops the character
             public float slowDownRate = 20f; // rate at which the controller comes to a stop when there is no input
@@ -90,25 +81,20 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
 
 
-        public Vector3 Velocity
-        {
+        public Vector3 Velocity {
             get { return m_RigidBody.velocity; }
         }
 
-        public bool Grounded
-        {
+        public bool Grounded {
             get { return m_IsGrounded; }
         }
 
-        public bool Jumping
-        {
+        public bool Jumping {
             get { return m_Jumping; }
         }
 
-        public bool Running
-        {
-            get
-            {
+        public bool Running {
+            get {
  #if !MOBILE_INPUT
 				return movementSettings.Running;
 #else
@@ -118,32 +104,28 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
 
-        private void Start()
-        {
+        private void Start() {
             m_RigidBody = GetComponent<Rigidbody>();
             m_Capsule = GetComponent<CapsuleCollider>();
             mouseLook.Init (transform, cam.transform);
         }
 
 
-        private void Update()
-        {
+        private void Update() {
             RotateView();
 
-            if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
-            {
+            if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump) {
                 m_Jump = true;
             }
         }
 
 
-        private void FixedUpdate()
-        {
+        private void FixedUpdate() {
             GroundCheck();
             Vector2 input = GetInput();
 
-            if ((Mathf.Abs(input.x) > float.Epsilon || Mathf.Abs(input.y) > float.Epsilon) && (advancedSettings.airControl || m_IsGrounded))
-            {
+            if ((Mathf.Abs(input.x) > float.Epsilon || Mathf.Abs(input.y) > float.Epsilon)
+                && (advancedSettings.airControl || m_IsGrounded)) {
                 // always move along the camera forward as it is the direction that it being aimed at
                 Vector3 desiredMove = cam.transform.forward*input.y + cam.transform.right*input.x;
                 desiredMove = Vector3.ProjectOnPlane(desiredMove, m_GroundContactNormal).normalized;
@@ -152,8 +134,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 desiredMove.z = desiredMove.z*movementSettings.CurrentTargetSpeed;
                 desiredMove.y = desiredMove.y*movementSettings.CurrentTargetSpeed;
                 if (m_RigidBody.velocity.sqrMagnitude <
-                    (movementSettings.CurrentTargetSpeed*movementSettings.CurrentTargetSpeed))
-                {
+                    (movementSettings.CurrentTargetSpeed*movementSettings.CurrentTargetSpeed)) {
                     m_RigidBody.AddForce(desiredMove*SlopeMultiplier(), ForceMode.Impulse);
                 }
             }
@@ -211,7 +192,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private Vector2 GetInput()
         {
-            
+
             Vector2 input = new Vector2
                 {
                     x = CrossPlatformInputManager.GetAxis("Horizontal"),
