@@ -151,10 +151,10 @@
      <Compile Include="Assets\Prefab Resources\Standard Assets\Utility\TimedObjectDestructor.cs" />
      <Compile Include="Assets\Prefab Resources\Standard Assets\Utility\WaypointCircuit.cs" />
      <Compile Include="Assets\Prefab Resources\Standard Assets\Utility\WaypointProgressTracker.cs" />
-     <Compile Include="Assets\Prefab\FirstPersonCharacter\Scripts\HeadBob.cs" />
-     <Compile Include="Assets\Prefab\FirstPersonCharacter\Scripts\MouseLook.cs" />
-     <Compile Include="Assets\Prefab\FirstPersonCharacter\Scripts\RigidbodyFirstPersonController.cs" />
      <Compile Include="Assets\Scripts\Bullet.cs" />
+     <Compile Include="Assets\Scripts\HeadBob.cs" />
+     <Compile Include="Assets\Scripts\MouseLook.cs" />
+     <Compile Include="Assets\Scripts\RigidbodyFirstPersonController.cs" />
      <Compile Include="Assets\Scripts\Weapon.cs" />
      <None Include="Assets\Prefab Resources\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Prefab Resources\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
