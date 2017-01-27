@@ -139,25 +139,20 @@ namespace UnityStandardAssets.Characters.FirstPerson {
                 }
             }
 
-            if (m_IsGrounded)
-            {
+            if (m_IsGrounded) {
                 m_RigidBody.drag = 5f;
-
-                if (m_Jump)
-                {
+                if (m_Jump) {
                     m_RigidBody.drag = 0f;
                     m_RigidBody.velocity = new Vector3(m_RigidBody.velocity.x, 0f, m_RigidBody.velocity.z);
                     m_RigidBody.AddForce(new Vector3(0f, movementSettings.JumpForce, 0f), ForceMode.Impulse);
                     m_Jumping = true;
                 }
 
-                if (!m_Jumping && Mathf.Abs(input.x) < float.Epsilon && Mathf.Abs(input.y) < float.Epsilon && m_RigidBody.velocity.magnitude < 1f)
-                {
+                if (!m_Jumping && Mathf.Abs(input.x) < float.Epsilon && Mathf.Abs(input.y) < float.Epsilon && m_RigidBody.velocity.magnitude < 1f) {
                     m_RigidBody.Sleep();
                 }
             }
-            else
-            {
+            else {
                 m_RigidBody.drag = 0f;
                 if (m_PreviouslyGrounded && !m_Jumping)
                 {
@@ -168,33 +163,28 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         }
 
 
-        private float SlopeMultiplier()
-        {
+        private float SlopeMultiplier() {
             float angle = Vector3.Angle(m_GroundContactNormal, Vector3.up);
             return movementSettings.SlopeCurveModifier.Evaluate(angle);
         }
 
 
-        private void StickToGroundHelper()
-        {
+        private void StickToGroundHelper() {
             RaycastHit hitInfo;
             if (Physics.SphereCast(transform.position, m_Capsule.radius * (1.0f - advancedSettings.shellOffset), Vector3.down, out hitInfo,
                                    ((m_Capsule.height/2f) - m_Capsule.radius) +
                                    advancedSettings.stickToGroundHelperDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
             {
-                if (Mathf.Abs(Vector3.Angle(hitInfo.normal, Vector3.up)) < 85f)
-                {
+                if (Mathf.Abs(Vector3.Angle(hitInfo.normal, Vector3.up)) < 85f) {
                     m_RigidBody.velocity = Vector3.ProjectOnPlane(m_RigidBody.velocity, hitInfo.normal);
                 }
             }
         }
 
 
-        private Vector2 GetInput()
-        {
+        private Vector2 GetInput() {
 
-            Vector2 input = new Vector2
-                {
+            Vector2 input = new Vector2 {
                     x = CrossPlatformInputManager.GetAxis("Horizontal"),
                     y = CrossPlatformInputManager.GetAxis("Vertical")
                 };
@@ -203,8 +193,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         }
 
 
-        private void RotateView()
-        {
+        private void RotateView() {
             //avoids the mouse looking if the game is effectively paused
             if (Mathf.Abs(Time.timeScale) < float.Epsilon) return;
 
@@ -213,8 +202,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
 
             mouseLook.LookRotation (transform, cam.transform);
 
-            if (m_IsGrounded || advancedSettings.airControl)
-            {
+            if (m_IsGrounded || advancedSettings.airControl) {
                 // Rotate the rigidbody velocity to match the new direction that the character is looking
                 Quaternion velRotation = Quaternion.AngleAxis(transform.eulerAngles.y - oldYRotation, Vector3.up);
                 m_RigidBody.velocity = velRotation*m_RigidBody.velocity;
@@ -222,8 +210,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         }
 
         /// sphere cast down just beyond the bottom of the capsule to see if the capsule is colliding round the bottom
-        private void GroundCheck()
-        {
+        private void GroundCheck() {
             m_PreviouslyGrounded = m_IsGrounded;
             RaycastHit hitInfo;
             if (Physics.SphereCast(transform.position, m_Capsule.radius * (1.0f - advancedSettings.shellOffset), Vector3.down, out hitInfo,
@@ -232,13 +219,11 @@ namespace UnityStandardAssets.Characters.FirstPerson {
                 m_IsGrounded = true;
                 m_GroundContactNormal = hitInfo.normal;
             }
-            else
-            {
+            else {
                 m_IsGrounded = false;
                 m_GroundContactNormal = Vector3.up;
             }
-            if (!m_PreviouslyGrounded && m_IsGrounded && m_Jumping)
-            {
+            if (!m_PreviouslyGrounded && m_IsGrounded && m_Jumping) {
                 m_Jumping = false;
             }
         }
