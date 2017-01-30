@@ -235,7 +235,6 @@
      <None Include="Assets\Prefab Resources\Standard Assets\Effects\ImageEffects\Shaders\Tonemapper.shader" />
      <None Include="Assets\Prefab Resources\Player\FirstPersonCharacterGuidelines.txt" />
      <None Include="Assets\Prefab Resources\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BrightPassFilter.shader" />
-     <None Include="Assets\survival-game-assets\Imports\Arms\Credit.txt" />
      <None Include="Assets\Prefab Resources\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAA2.shader" />
      <None Include="Assets\Prefab Resources\Standard Assets\Cameras\CameraGuidelines.txt" />
      <None Include="Assets\Prefab Resources\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrection3DLut.shader" />
@@ -246,7 +245,6 @@
      <None Include="Assets\Prefab Resources\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
      <None Include="Assets\Prefab Resources\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
      <None Include="Assets\Prefab Resources\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
-     <None Include="Assets\survival-game-assets\README.txt" />
      <None Include="Assets\Prefab Resources\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
      <None Include="Assets\Prefab Resources\Standard Assets\Effects\ImageEffects\Shaders\SimpleClear.shader" />
      <None Include="Assets\Prefab Resources\Standard Assets\ParticleSystems\Shaders\PriorityParticleAdd.shader" />

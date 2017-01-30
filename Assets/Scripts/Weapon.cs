@@ -24,6 +24,7 @@ public class Weapon : MonoBehaviour {
             return;
         Vector3 wep;
         Vector3 position;
+        // Get current weapon's position
         switch(curWeapon) {
             case weapons.pistol:
                 wep = GameObject.FindWithTag("Pistol").transform.position;

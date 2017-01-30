@@ -1,0 +1,7 @@
+*.meta
+Assets/*.meta
+Assets/Scripts/*.meta
+*.cs.meta
+Assets/*.cs.meta
+Assets/Scripts/*.cs.meta
+*.csproj
