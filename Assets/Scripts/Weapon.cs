@@ -27,7 +27,7 @@ public class Weapon : MonoBehaviour {
         // Get current weapon's position
         switch(curWeapon) {
             case weapons.pistol:
-                wep = GameObject.FindWithTag("Pistol").transform.position;
+                wep = GameObject.FindWithTag("Center").transform.position;
                 position = new Vector3(wep.x, wep.y, wep.z);
                 break;
             default:
