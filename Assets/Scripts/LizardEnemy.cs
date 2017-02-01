@@ -38,9 +38,17 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         }
     }
 
+    void OnTriggerEnter(Collider col) {
+        string tag = col.gameObject.tag;
+
+        if (tag == "AirBlast") {
+            Debug.Log(tag);
+            GetComponent<Rigidbody>().AddForce(transform.forward * -200, ForceMode.Impulse);
+        }
+    }
+
     void OnCollisionEnter(Collision col) {
-        if (health < 1)
-            return;
+        if (health < 1) return;
         string tag = col.gameObject.tag;
 
         GetHurt(tag);
@@ -56,16 +64,18 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     // http://answers.unity3d.com/questions/26177/how-to-create-a-basic-follow-ai.html
     void AddMovement() {
         Vector3 newPos = myTransform.forward * WALKSPEED * Time.deltaTime;
-        myTransform.position += new Vector3(newPos.x, 0, newPos.z);
+        //GetComponent<Rigidbody>().AddForce(transform.forward * 20, ForceMode.Impulse);
+        //myTransform.position += new Vector3(newPos.x, 0, newPos.z);
     }
 
     void ChasePlayer() {
         Vector3 playerPos = GameObject.FindWithTag("Player").transform.position;
-        myTransform.rotation = Quaternion.Slerp(
+        Vector3 turn = Quaternion.Slerp(
             myTransform.rotation,
             Quaternion.LookRotation(playerPos - myTransform.position),
             Time.deltaTime * TURNSPEED
-        );
+        ).eulerAngles;
+        myTransform.rotation = Quaternion.Euler(0, turn.y, turn.z);
     }
 
     void GetHurt(string tag) {
