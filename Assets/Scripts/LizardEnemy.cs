@@ -42,8 +42,10 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         string tag = col.gameObject.tag;
 
         if (tag == "AirBlast") {
-            Debug.Log(tag);
-            GetComponent<Rigidbody>().AddForce(transform.forward * -200, ForceMode.Impulse);
+            GetComponent<Rigidbody>().AddForce(
+                col.gameObject.transform.forward * 400,
+                ForceMode.Impulse
+            );
         }
     }
 
@@ -64,7 +66,10 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     // http://answers.unity3d.com/questions/26177/how-to-create-a-basic-follow-ai.html
     void AddMovement() {
         Vector3 newPos = myTransform.forward * WALKSPEED * Time.deltaTime;
-        //GetComponent<Rigidbody>().AddForce(transform.forward * 20, ForceMode.Impulse);
+        Rigidbody rigid = GetComponent<Rigidbody>();
+        if (rigid.velocity.sqrMagnitude < 5f * 5f) {
+            rigid.AddForce(myTransform.forward * 20, ForceMode.Impulse);
+        }
         //myTransform.position += new Vector3(newPos.x, 0, newPos.z);
     }
 
