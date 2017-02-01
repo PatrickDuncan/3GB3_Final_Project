@@ -151,6 +151,7 @@
      <Compile Include="Assets\Prefab Resources\Standard Assets\Utility\TimedObjectDestructor.cs" />
      <Compile Include="Assets\Prefab Resources\Standard Assets\Utility\WaypointCircuit.cs" />
      <Compile Include="Assets\Prefab Resources\Standard Assets\Utility\WaypointProgressTracker.cs" />
+     <Compile Include="Assets\Scripts\AirBlast.cs" />
      <Compile Include="Assets\Scripts\Bullet.cs" />
      <Compile Include="Assets\Scripts\HeadBob.cs" />
      <Compile Include="Assets\Scripts\IEnemy.cs" />

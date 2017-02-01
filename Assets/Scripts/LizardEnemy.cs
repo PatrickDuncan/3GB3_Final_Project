@@ -34,6 +34,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         // Move
         if (walking) {
             ChasePlayer();
+            AddMovement();
         }
     }
 
@@ -54,23 +55,8 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
 
     // http://answers.unity3d.com/questions/26177/how-to-create-a-basic-follow-ai.html
     void AddMovement() {
-        Vector3 velocity = GetComponent<Rigidbody>().velocity;
-        Vector3 forward = myTransform.forward;
-        if (velocity.x > MAXVELOCITY) {
-            velocity.x = MAXVELOCITY;
-            forward.x = 0;
-        }
-        if (velocity.y > MAXVELOCITY) {
-            velocity.y = MAXVELOCITY;
-            forward.y = 0;
-        }
-        if (velocity.z > MAXVELOCITY) {
-            velocity.z = MAXVELOCITY;
-            forward.z = 0;
-        }
-        //GetComponent<Rigidbody>().AddForce(forward * walkSpeed);
-        //GetComponent<Rigidbody>().velocity = velocity;
-        myTransform.position += myTransform.forward * WALKSPEED * Time.deltaTime;
+        Vector3 newPos = myTransform.forward * WALKSPEED * Time.deltaTime;
+        myTransform.position += new Vector3(newPos.x, 0, newPos.z);
     }
 
     void ChasePlayer() {
@@ -80,7 +66,6 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
             Quaternion.LookRotation(playerPos - myTransform.position),
             Time.deltaTime * TURNSPEED
         );
-        AddMovement();
     }
 
     void GetHurt(string tag) {

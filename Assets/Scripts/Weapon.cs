@@ -6,10 +6,9 @@ using System.Collections;
 public class Weapon : MonoBehaviour {
 
     bool allowedToShoot = true;
-    float[] waitTimes = {1f, 0.2f, 1f, 1f};
+    float[] WAIT_TIMES = {1f, 0.2f, 1f, 1f};
 
     public GameObject bullet;	// Assign the bullet prefab in the editor
-    public Camera cam;
 
     enum weapons {
         melee,
@@ -19,7 +18,7 @@ public class Weapon : MonoBehaviour {
     }
     weapons curWeapon = weapons.pistol;
 
-    private void Update() {
+    void Update() {
         if (!allowedToShoot)
             return;
         Vector3 wep;
@@ -39,14 +38,14 @@ public class Weapon : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
 			GameObject gO = Instantiate(bullet, position, Quaternion.Euler(90, 0, 0)) as GameObject;
 			gO.GetComponent<Rigidbody>().AddForce(transform.forward * 200);
-            StartCoroutine(Wait());
+            StartCoroutine(WaitToShoot());
 		}
     }
 
     // You just used a weapon, wait to shoot again.
-	private IEnumerator Wait() {
+	IEnumerator WaitToShoot() {
         allowedToShoot = false;
-        yield return new WaitForSeconds(waitTimes[(int) curWeapon]);
+        yield return new WaitForSeconds(WAIT_TIMES[(int) curWeapon]);
      	allowedToShoot = true;
     }
 }
