@@ -10,6 +10,11 @@ public class AirBlast : MonoBehaviour {
     const float WAIT_TIME = 5f;
 
     public GameObject airWall;
+    AudioSource shootSound;
+
+    void Start() {
+        shootSound = GameObject.FindWithTag("AirBlastOrigin").GetComponent<AudioSource>();
+    }
 
     void Update() {
         if (!allowedToShoot) return;
@@ -20,6 +25,7 @@ public class AirBlast : MonoBehaviour {
             GameObject gO = Instantiate(airWall, position, rotation) as GameObject;
 			gO.GetComponent<Rigidbody>().AddForce(transform.forward * 500000);
 
+            shootSound.Play();
             Destroy(gO, DISPPEAR_TIME);
             StartCoroutine(WaitToShoot());
 		}

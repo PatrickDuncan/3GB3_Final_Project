@@ -9,6 +9,7 @@ public class Weapon : MonoBehaviour {
     float[] WAIT_TIMES = {1f, 0.2f, 1f, 1f};
 
     public GameObject bullet;	// Assign the bullet prefab in the editor
+    AudioSource shootSound;
 
     enum weapons {
         melee,
@@ -21,13 +22,13 @@ public class Weapon : MonoBehaviour {
     void Update() {
         if (!allowedToShoot)
             return;
-        Vector3 wep;
-        Vector3 position;
-        // Get current weapon's position
+        Vector3 wep = GameObject.FindWithTag("Center").transform.position;
+        Vector3 position = new Vector3(wep.x, wep.y, wep.z);
+        // Do things based on the current weapon
+        // will use later
         switch(curWeapon) {
             case weapons.pistol:
-                wep = GameObject.FindWithTag("Center").transform.position;
-                position = new Vector3(wep.x, wep.y, wep.z);
+                shootSound = GameObject.FindWithTag("Pistol").GetComponent<AudioSource>();
                 break;
             default:
                 position = new Vector3(0, 0, 0);
@@ -38,6 +39,7 @@ public class Weapon : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
 			GameObject gO = Instantiate(bullet, position, Quaternion.Euler(90, 0, 0)) as GameObject;
 			gO.GetComponent<Rigidbody>().AddForce(transform.forward * 200);
+            shootSound.Play();
             StartCoroutine(WaitToShoot());
 		}
     }
