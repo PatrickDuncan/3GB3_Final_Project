@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class LizardEnemy : MonoBehaviour, IEnemy {
 
@@ -6,15 +7,17 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     bool attacking = true;
 
     public int health = 100;
-    public float walkSpeed;
     int scream;
 	int basicAttack;
 	int hurt;
 	int walk;
 	int die;
-    float maxVelocity = 5;
+    const float WALKSPEED = 8;
+    const float MAXVELOCITY = 4;
+    const float TURNSPEED = 2;
 
     public Animator anim;
+    Transform myTransform;
 
     void Awake () {
 		anim = GetComponent<Animator>();
@@ -24,14 +27,14 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
 		walk = Animator.StringToHash("Walk");
 		die = Animator.StringToHash("Die");
         anim.SetTrigger(walk);
+        myTransform = transform;
 	}
 
     void FixedUpdate() {
         // Move
         if (walking) {
-            GetComponent<Rigidbody>().AddForce(transform.forward * walkSpeed);
+            ChasePlayer();
         }
-        RegulateVelocity();
     }
 
     void OnCollisionEnter(Collision col) {
@@ -49,15 +52,35 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         }
     }
 
-    void RegulateVelocity() {
+    // http://answers.unity3d.com/questions/26177/how-to-create-a-basic-follow-ai.html
+    void AddMovement() {
         Vector3 velocity = GetComponent<Rigidbody>().velocity;
-        if (velocity.x > 5)
-            velocity.x = 5;
-        if (velocity.y > 5)
-            velocity.y = 5;
-        if (velocity.z > 5)
-            velocity.z = 5;
-        GetComponent<Rigidbody>().velocity = velocity;
+        Vector3 forward = myTransform.forward;
+        if (velocity.x > MAXVELOCITY) {
+            velocity.x = MAXVELOCITY;
+            forward.x = 0;
+        }
+        if (velocity.y > MAXVELOCITY) {
+            velocity.y = MAXVELOCITY;
+            forward.y = 0;
+        }
+        if (velocity.z > MAXVELOCITY) {
+            velocity.z = MAXVELOCITY;
+            forward.z = 0;
+        }
+        //GetComponent<Rigidbody>().AddForce(forward * walkSpeed);
+        //GetComponent<Rigidbody>().velocity = velocity;
+        myTransform.position += myTransform.forward * WALKSPEED * Time.deltaTime;
+    }
+
+    void ChasePlayer() {
+        Vector3 playerPos = GameObject.FindWithTag("Player").transform.position;
+        myTransform.rotation = Quaternion.Slerp(
+            myTransform.rotation,
+            Quaternion.LookRotation(playerPos - myTransform.position),
+            Time.deltaTime * TURNSPEED
+        );
+        AddMovement();
     }
 
     void GetHurt(string tag) {

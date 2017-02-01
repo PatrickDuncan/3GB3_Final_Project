@@ -38,7 +38,7 @@ public class Weapon : MonoBehaviour {
         // If the key is pressed create a game object (bullet) and then add a velocity
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
 			GameObject gO = Instantiate(bullet, position, Quaternion.Euler(90, 0, 0)) as GameObject;
-			gO.GetComponent<Rigidbody>().AddForce(transform.forward * 120);
+			gO.GetComponent<Rigidbody>().AddForce(transform.forward * 200);
             StartCoroutine(Wait());
 		}
     }
