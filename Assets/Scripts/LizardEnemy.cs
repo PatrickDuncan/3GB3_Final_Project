@@ -12,7 +12,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
 	int hurt;
 	int walk;
 	int die;
-    const float WALKSPEED = 8;
+    const float WALKSPEED = 10;
     const float MAXVELOCITY = 4;
     const float TURNSPEED = 2;
 
@@ -38,17 +38,6 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         }
     }
 
-    void OnTriggerEnter(Collider col) {
-        string tag = col.gameObject.tag;
-
-        if (tag == "AirBlast") {
-            GetComponent<Rigidbody>().AddForce(
-                col.gameObject.transform.forward * 400,
-                ForceMode.Impulse
-            );
-        }
-    }
-
     void OnCollisionEnter(Collision col) {
         if (health < 1) return;
         string tag = col.gameObject.tag;
@@ -63,14 +52,20 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         }
     }
 
-    // http://answers.unity3d.com/questions/26177/how-to-create-a-basic-follow-ai.html
+    void OnTriggerEnter(Collider col) {
+        if (col.gameObject.tag == "AirBlast") {
+            GetComponent<Rigidbody>().AddForce(
+                col.gameObject.transform.forward * 1000,
+                ForceMode.Impulse
+            );
+        }
+    }
+
     void AddMovement() {
-        Vector3 newPos = myTransform.forward * WALKSPEED * Time.deltaTime;
         Rigidbody rigid = GetComponent<Rigidbody>();
         if (rigid.velocity.sqrMagnitude < 5f * 5f) {
             rigid.AddForce(myTransform.forward * 20, ForceMode.Impulse);
         }
-        //myTransform.position += new Vector3(newPos.x, 0, newPos.z);
     }
 
     void ChasePlayer() {
