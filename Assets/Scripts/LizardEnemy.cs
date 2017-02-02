@@ -6,22 +6,21 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     bool walking = true;
     bool attacking = true;
 
-    public int health = 100;
+    int health = 100;
     int scream;
 	int basicAttack;
 	int hurt;
 	int walk;
 	int die;
-    const float WALKSPEED = 10;
-    const float MAXVELOCITY = 4;
-    const float TURNSPEED = 2;
+    const float WALKSPEED = 10f;
+    const float MAXVELOCITY = 4f;
+    const float TURNSPEED = 2f;
 
-    public Animator anim;
+    Animator anim;
     Transform myTransform;
 
-    void Awake () {
+    void Awake() {
 		anim = GetComponent<Animator>();
-		scream = Animator.StringToHash("Scream");
 		basicAttack = Animator.StringToHash("Basic Attack");
 		hurt = Animator.StringToHash("Get Hit");
 		walk = Animator.StringToHash("Walk");
