@@ -20,9 +20,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
                 new Keyframe(90.0f, 0.0f));
             [HideInInspector] public float CurrentTargetSpeed = 8f;
 
-#if !MOBILE_INPUT
             private bool m_Running;
-#endif
 
             public void UpdateDesiredTargetSpeed(Vector2 input) {
 	            if (input == Vector2.zero) return;
@@ -39,7 +37,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
 					//handled last as if strafing and moving forward at the same time forwards speed should take precedence
 					CurrentTargetSpeed = ForwardSpeed;
 				}
-#if !MOBILE_INPUT
+
 	            if (Input.GetKey(RunKey)) {
 		            CurrentTargetSpeed *= RunMultiplier;
 		            m_Running = true;
@@ -47,14 +45,11 @@ namespace UnityStandardAssets.Characters.FirstPerson {
 	            else {
 		            m_Running = false;
 	            }
-#endif
             }
 
-#if !MOBILE_INPUT
             public bool Running {
                 get { return m_Running; }
             }
-#endif
         }
 
         [Serializable]
@@ -67,19 +62,17 @@ namespace UnityStandardAssets.Characters.FirstPerson {
             public float shellOffset; //reduce the radius by that ratio to avoid getting stuck in wall (a value of 0.1f is nice)
         }
 
-
         public Camera cam;
         public MovementSettings movementSettings = new MovementSettings();
         public MouseLook mouseLook = new MouseLook();
         public AdvancedSettings advancedSettings = new AdvancedSettings();
-
 
         private Rigidbody m_RigidBody;
         private CapsuleCollider m_Capsule;
         private float m_YRotation;
         private Vector3 m_GroundContactNormal;
         private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
-
+        private PlayerHealth playerHealth;
 
         public Vector3 Velocity {
             get { return m_RigidBody.velocity; }
@@ -95,23 +88,20 @@ namespace UnityStandardAssets.Characters.FirstPerson {
 
         public bool Running {
             get {
- #if !MOBILE_INPUT
 				return movementSettings.Running;
-#else
 	            return false;
-#endif
             }
         }
-
 
         private void Start() {
             m_RigidBody = GetComponent<Rigidbody>();
             m_Capsule = GetComponent<CapsuleCollider>();
             mouseLook.Init (transform, cam.transform);
+            playerHealth = GetComponent<PlayerHealth>();
         }
 
-
         private void Update() {
+            if (playerHealth.GetHealth() < 1) return;
             RotateView();
 
             if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump) {
@@ -119,8 +109,8 @@ namespace UnityStandardAssets.Characters.FirstPerson {
             }
         }
 
-
         private void FixedUpdate() {
+            if (playerHealth.GetHealth() < 1) return;
             GroundCheck();
             Vector2 input = GetInput();
 
@@ -162,12 +152,10 @@ namespace UnityStandardAssets.Characters.FirstPerson {
             m_Jump = false;
         }
 
-
         private float SlopeMultiplier() {
             float angle = Vector3.Angle(m_GroundContactNormal, Vector3.up);
             return movementSettings.SlopeCurveModifier.Evaluate(angle);
         }
-
 
         private void StickToGroundHelper() {
             RaycastHit hitInfo;
@@ -181,7 +169,6 @@ namespace UnityStandardAssets.Characters.FirstPerson {
             }
         }
 
-
         private Vector2 GetInput() {
 
             Vector2 input = new Vector2 {
@@ -191,7 +178,6 @@ namespace UnityStandardAssets.Characters.FirstPerson {
 			movementSettings.UpdateDesiredTargetSpeed(input);
             return input;
         }
-
 
         private void RotateView() {
             //avoids the mouse looking if the game is effectively paused

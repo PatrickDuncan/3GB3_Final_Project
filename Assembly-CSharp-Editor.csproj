@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Prefab Resources\Standard Assets\Editor\CrossPlatformInput\CrossPlatformInputInitialize.cs" />
+     <Compile Include="Assets\PyroParticles\Prefab\Editor\PyroParticlesEditor.cs" />
      <None Include="Assets\Prefab Resources\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Prefab Resources\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Prefab Resources\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />

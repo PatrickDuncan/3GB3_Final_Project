@@ -83,9 +83,6 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
                 health -= 20;
                 anim.SetTrigger(hurt);
                 break;
-            case "Fire":
-                health = 0; // instant death
-                break;
 		}
     }
 }

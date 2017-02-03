@@ -2,12 +2,23 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour {
 
-	public int health;
+	int health = 100;
 
-	private void OnCollisionEnter(Collision col) {
+	void OnTriggerEnter(Collider col) {
 		string tag = col.gameObject.tag;
-		if (tag != "Player") {
-        	//Destroy(gameObject);    // auto destroy on impact
+		GetHurt(tag);
+	}
+
+	public int GetHealth() {
+		return health;
+	}
+
+	void GetHurt(string tag) {
+		switch(tag) {
+			case "Fire":
+				GetComponent<Rigidbody>().isKinematic = true;
+	        	health = 0;	// instant death
+				break;
 		}
 	}
 }
