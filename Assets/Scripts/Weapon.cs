@@ -5,7 +5,7 @@ using System.Collections;
 
 public class Weapon : MonoBehaviour {
 
-    bool allowedToShoot = true;
+    bool shooting = false;
     float[] WAIT_TIMES = {1f, 0.2f, 1f, 1f};
 
     public GameObject bullet;	// Assign the bullet prefab in the editor
@@ -20,8 +20,7 @@ public class Weapon : MonoBehaviour {
     weapons curWeapon = weapons.pistol;
 
     void Update() {
-        if (!allowedToShoot)
-            return;
+        if (shooting) return;
         Vector3 wep = GameObject.FindWithTag("Center").transform.position;
         Vector3 position = new Vector3(wep.x, wep.y, wep.z);
         // Do things based on the current weapon
@@ -46,8 +45,8 @@ public class Weapon : MonoBehaviour {
 
     // You just used a weapon, wait to shoot again.
 	IEnumerator WaitToShoot() {
-        allowedToShoot = false;
+        shooting = true;
         yield return new WaitForSeconds(WAIT_TIMES[(int) curWeapon]);
-     	allowedToShoot = true;
+     	shooting = false;
     }
 }

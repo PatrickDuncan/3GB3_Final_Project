@@ -27,7 +27,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
         if (health < 1) return;
 
         string tag = col.gameObject.tag;
-        GetHurt(tag);
+        CheckCollisions(tag);
 
         if (health < 1) {
             anim.SetTrigger(die);
@@ -46,7 +46,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
         }
     }
 
-    void GetHurt(string tag) {
+    void CheckCollisions(string tag) {
         switch(tag) {
             case "PistolBullet":
                 health -= 15;

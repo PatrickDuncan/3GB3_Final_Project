@@ -89,7 +89,6 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         public bool Running {
             get {
 				return movementSettings.Running;
-	            return false;
             }
         }
 
