@@ -4,17 +4,17 @@ using System.Collections;
 
 public class LizardEnemy : MonoBehaviour, IEnemy {
 
-    bool walking = true;
-    bool attacking = false;         // if they can damage the enemy
-    bool waitToAttack = false;      // if they can attack again
+    bool walking;
+    bool attacking;         // if they can damage the enemy
+    bool waitToAttack;      // if they can attack again
 
-    int health = 100;
+    int health;
+    int playerCollisions;
     int scream;
 	int attack;
 	int hurt;
 	int walk;
 	int die;
-    int playerCollisions = 0;
     const float MAXVELOCITY = 12f;
     const float TURNSPEED = 2f;
     const float WAIT_ATTACK = 4f;
@@ -24,6 +24,11 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     Transform playerTrans;
 
     void Awake() {
+        walking = true;
+        attacking = false;
+        waitToAttack = false;
+        health = 100;
+        playerCollisions = 0;
 		anim = GetComponent<Animator>();
 		attack = Animator.StringToHash("Basic Attack");
 		hurt = Animator.StringToHash("Get Hit");
@@ -53,13 +58,6 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         string tag = col.gameObject.tag;
 
         CheckCollisions(tag);
-
-        if (health < 1) {
-            anim.SetTrigger(die);
-            gameObject.layer = 2;
-            walking = false;
-            attacking = false;
-        }
     }
 
     void OnTriggerEnter(Collider col) {
@@ -93,6 +91,31 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         myTransform.rotation = Quaternion.Euler(0, turn.y, turn.z);
     }
 
+    void CheckCollisions(string tag) {
+        switch(tag) {
+            case "PistolBullet":
+            health -= 20;
+            anim.SetTrigger(hurt);
+            break;
+            case "Player":
+            if (playerCollisions > 0) {
+                attacking = false;
+            }
+            ++playerCollisions;
+            break;
+        }
+        Death();
+    }
+
+    void Death() {
+        if (health < 1) {
+            anim.SetTrigger(die);
+            gameObject.layer = 2;
+            walking = false;
+            attacking = false;
+        }
+    }
+
     bool PlayerProximity() {
         bool closeEnough = Math.Sqrt(
             Math.Pow(myTransform.position.x - playerTrans.position.x, 2)
@@ -106,21 +129,6 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
 
     public bool GetAttacking() {
         return attacking;
-    }
-
-    void CheckCollisions(string tag) {
-        switch(tag) {
-            case "PistolBullet":
-                health -= 20;
-                anim.SetTrigger(hurt);
-                break;
-            case "Player":
-                if (playerCollisions > 0) {
-                    attacking = false;
-                }
-                ++playerCollisions;
-                break;
-		}
     }
 
     IEnumerator WaitToAttack() {

@@ -2,17 +2,35 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour {
 
-	int health = 100;
+	int health;
+
+	Transform myTransform;
+	GameObject death;
+
+	void Awake() {
+		health = 100;
+		myTransform = transform;
+		death = GameObject.FindWithTag("DeathScreen");
+		death.SetActive(false);
+	}
 
 	void OnTriggerEnter(Collider col) {
+		if (health < 1) return;
 		GetHurt(col.gameObject.tag);
 	}
 
 	void OnCollisionEnter(Collision col) {
+		if (health < 1) return;
 		string tag = col.gameObject.tag;
 		if (tag.Contains("Enemy")
 		&& col.gameObject.GetComponent<LizardEnemy>().GetAttacking()) {
 			GetHurt(tag);
+		}
+	}
+
+	void Death() {
+		if (health < 1) {
+			death.SetActive(true);
 		}
 	}
 
@@ -30,5 +48,6 @@ public class PlayerHealth : MonoBehaviour {
 	        	health = 0;	// instant death
 				break;
 		}
+		Death();
 	}
 }
