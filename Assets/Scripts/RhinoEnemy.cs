@@ -6,22 +6,29 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
     //bool walking = true;
     //bool attacking = true;
 
-    int health = 200;
+    int health;
 	int hurt;
 	int die;
     const float WALKSPEED = 20f;
     const float MAXVELOCITY = 10f;
-    const float TURNSPEED = 1.2f;
+    const float TURNSPEED = 0.8f;
 
     Animator anim;
-    //Transform myTransform;
+    Transform myTransform;
+    Transform playerTrans;
 
     void Awake() {
+        health = 200;
 		anim = GetComponent<Animator>();
 		hurt = Animator.StringToHash("Get Hit");
 		die = Animator.StringToHash("Die");
-    //    myTransform = transform;
+        myTransform = transform;
+        playerTrans = GameObject.FindWithTag("Player").transform;
 	}
+
+    void FixedUpdate() {
+        ChasePlayer();
+    }
 
     void OnCollisionEnter(Collision col) {
         if (health < 1) return;
@@ -53,5 +60,14 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
                 anim.SetTrigger(hurt);
                 break;
 		}
+    }
+
+    void ChasePlayer() {
+        Vector3 turn = Quaternion.Slerp(
+            myTransform.rotation,
+            Quaternion.LookRotation(playerTrans.position - myTransform.position),
+            Time.deltaTime * TURNSPEED
+        ).eulerAngles;
+        myTransform.rotation = Quaternion.Euler(0, turn.y, turn.z);
     }
 }
