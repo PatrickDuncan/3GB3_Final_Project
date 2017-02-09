@@ -6,10 +6,10 @@ using System.Collections;
 public class Weapon : MonoBehaviour {
 
     bool shooting = false;
-    bool[] reloading = {false, false, false};
-    float[] CLIP_SIZES = {8, 2, 15};
-    float[] clip_sizes = {8, 2, 15};
-    float[] WAIT_TIMES = {0.3f, 0.35f, 1.5f, 0.1f};
+    bool[] reloading = {false, false, false, false};
+    float[] CLIP_SIZES = {8, 1, 15};
+    float[] clip_sizes = new float[3];
+    float[] WAIT_TIMES = {0.3f, 0.35f, 1.6f, 0.1f};
 
     public GameObject bullet;	// Assign the bullet prefab in the editor
     GameObject melee;
@@ -39,6 +39,9 @@ public class Weapon : MonoBehaviour {
         anim = shotgun.GetComponent<Animator>();
         shootSound = shotgun.GetComponent<AudioSource>();
         bullet.tag = "ShotgunBullet";
+        clip_sizes[0] = CLIP_SIZES[0];
+        clip_sizes[1] = CLIP_SIZES[1];
+        clip_sizes[2] = CLIP_SIZES[2];
     }
 
     void Update() {
@@ -54,7 +57,7 @@ public class Weapon : MonoBehaviour {
                 --clip_sizes[0];
                 if (clip_sizes[0] == 0) {
                     anim.SetTrigger("Reload");
-                    StartCoroutine(WaitReload(0));
+                    StartCoroutine(WaitReload(1));
                     clip_sizes[0] = CLIP_SIZES[0];
                 }
                 break;
@@ -62,7 +65,7 @@ public class Weapon : MonoBehaviour {
                 --clip_sizes[1];
                 if (clip_sizes[1] == 0) {
                     anim.SetTrigger("Reload");
-                    StartCoroutine(WaitReload(1));
+                    StartCoroutine(WaitReload(2));
                     clip_sizes[1] = CLIP_SIZES[1];
                 }
                 break;
@@ -70,7 +73,7 @@ public class Weapon : MonoBehaviour {
                 --clip_sizes[2];
                 if (clip_sizes[2] == 0) {
                     anim.SetTrigger("Reload");
-                    StartCoroutine(WaitReload(2));
+                    StartCoroutine(WaitReload(3));
                     clip_sizes[2] = CLIP_SIZES[2];
                 }
                 break;
@@ -79,7 +82,7 @@ public class Weapon : MonoBehaviour {
 
     void CheckKeyInput(Vector3 position) {
         // Stuck in reloading animation
-        if (reloading[(int) curWeapon - 1]) return;
+        if (reloading[(int) curWeapon]) return;
         // If the key is pressed create a game object (bullet) and then add a velocity
         if (Input.GetKeyDown(KeyCode.Mouse0) && curWeapon != weapons.melee) {
 

@@ -27,6 +27,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
 	}
 
     void FixedUpdate() {
+        if (health < 1) return;
         ChasePlayer();
     }
 
