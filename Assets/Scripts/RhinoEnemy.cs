@@ -59,6 +59,14 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
                 health -= 15;
                 anim.SetTrigger(hurt);
                 break;
+            case "ShotgunBullet":
+                health -= 35;
+                anim.SetTrigger(hurt);
+                break;
+            case "SMGBullet":
+                health -= 8;
+                anim.SetTrigger(hurt);
+                break;
 		}
     }
 

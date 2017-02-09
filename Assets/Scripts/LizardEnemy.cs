@@ -94,15 +94,23 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     void CheckCollisions(string tag) {
         switch(tag) {
             case "PistolBullet":
-            health -= 20;
-            anim.SetTrigger(hurt);
-            break;
+                health -= 20;
+                anim.SetTrigger(hurt);
+                break;
+            case "ShotgunBullet":
+                health -= 50;
+                anim.SetTrigger(hurt);
+                break;
+            case "SMGBullet":
+                health -= 10;
+                anim.SetTrigger(hurt);
+                break;
             case "Player":
-            if (playerCollisions > 0) {
-                attacking = false;
-            }
-            ++playerCollisions;
-            break;
+                if (playerCollisions > 0) {
+                    attacking = false;
+                }
+                ++playerCollisions;
+                break;
         }
         Death();
     }
