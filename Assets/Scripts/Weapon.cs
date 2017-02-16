@@ -55,31 +55,15 @@ public class Weapon : MonoBehaviour {
     void Ammunition() {
         switch(curWeapon) {
             case weapons.pistol:
-                --clip_sizes[0];
-                if (clip_sizes[0] == 0) {
-                    anim.SetTrigger("Reload");
-                    StartCoroutine(WaitReload(1));
-                    clip_sizes[0] = CLIP_SIZES[0];
-                }
+                GunReloading(0);
                 break;
             case weapons.shotgun:
-                --clip_sizes[1];
-                if (clip_sizes[1] == 0) {
-                    anim.SetTrigger("Reload");
-                    StartCoroutine(WaitReload(2));
-                    clip_sizes[1] = CLIP_SIZES[1];
-                }
+                GunReloading(1);
                 break;
             case weapons.smg:
-                --clip_sizes[2];
-                if (clip_sizes[2] == 0) {
-                    anim.SetTrigger("Reload");
-                    StartCoroutine(WaitReload(3));
-                    clip_sizes[2] = CLIP_SIZES[2];
-                }
+                GunReloading(2);
                 break;
         }
-        UpdateUI();
     }
 
     void CheckKeyInput(Vector3 position) {
@@ -141,6 +125,16 @@ public class Weapon : MonoBehaviour {
         }
     }
 
+    void GunReloading(int i) {
+        --clip_sizes[i];
+        UpdateUI();
+        if (clip_sizes[i] == 0) {
+            anim.SetTrigger("Reload");
+            StartCoroutine(WaitReload(i + 1));
+            clip_sizes[i] = CLIP_SIZES[i];
+        }
+    }
+
     void UpdateUI() {
         string ammo = "";
         switch(curWeapon) {
@@ -148,13 +142,13 @@ public class Weapon : MonoBehaviour {
                 ammo = "-/-";
                 break;
             case weapons.pistol:
-                ammo = clip_sizes[0] + " / " + CLIP_SIZES[0];
+                ammo = " " + clip_sizes[0] + " / " + CLIP_SIZES[0] + " ";
                 break;
             case weapons.shotgun:
-                ammo = clip_sizes[1] + " / " + CLIP_SIZES[1];
+                ammo = " " + clip_sizes[1] + " / " + CLIP_SIZES[1] + " ";
                 break;
             case weapons.smg:
-                ammo = clip_sizes[2] + " / " + CLIP_SIZES[2];
+                ammo = (clip_sizes[2] < 10 ? " " : "") + clip_sizes[2] + " / " + CLIP_SIZES[2];
                 break;
         }
 		GameObject.FindWithTag("Ammo").GetComponent<Text>().text = ammo;
@@ -170,6 +164,7 @@ public class Weapon : MonoBehaviour {
 	IEnumerator WaitReload(int i) {
         reloading[i] = true;
         yield return new WaitForSeconds(1.6f);
+        UpdateUI();
      	reloading[i] = false;
     }
 }
