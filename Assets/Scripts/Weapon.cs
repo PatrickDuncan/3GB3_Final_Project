@@ -19,6 +19,7 @@ public class Weapon : MonoBehaviour {
     GameObject shotgun;
     Animator anim;
     AudioSource shootSound;
+    PlayerHealth playerHealth;
 
     enum weapons {
         melee,
@@ -34,6 +35,7 @@ public class Weapon : MonoBehaviour {
         pistol = GameObject.FindWithTag("Pistol");
         shotgun = GameObject.FindWithTag("Shotgun");
         smg = GameObject.FindWithTag("SubmachineGun");
+        playerHealth = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
         melee.SetActive(false);
         pistol.SetActive(false);
         smg.SetActive(false);
@@ -69,8 +71,9 @@ public class Weapon : MonoBehaviour {
 
     void CheckKeyInput(Vector3 position) {
         int current = (int) curWeapon;
-        // Stuck in reloading animation
-        if (reloading[current]) return;
+        // Stuck in reloading animation and can't shoot while dead
+        if (reloading[current] || playerHealth.GetHealth() < 1)
+            return;
         // If the key is pressed create a game object (bullet) and then add a velocity
         if (Input.GetKeyDown(KeyCode.Mouse0) && curWeapon != weapons.melee) {
             // can't shoot if there's no ammo of that weapon's type
@@ -145,7 +148,9 @@ public class Weapon : MonoBehaviour {
             StartCoroutine(WaitReload(i + 1));
             int subtration = ammo_sizes[i] - CLIP_SIZES[i];
             int amount = subtration > 0 ? subtration : ammo_sizes[i];
+            // If ammo is more than max clip size then subtract it, if not make it 0
             ammo_sizes[i] = subtration > 0 ? subtration : 0;
+            // Current clip size is the max clip size, the left overs, or 0
             clip_sizes[i] = amount > 0
                 ? (amount > CLIP_SIZES[i] ? CLIP_SIZES[i] : amount)
                 : 0;
