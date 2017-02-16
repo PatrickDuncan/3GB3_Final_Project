@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Weapon : MonoBehaviour {
@@ -42,6 +42,7 @@ public class Weapon : MonoBehaviour {
         clip_sizes[0] = CLIP_SIZES[0];
         clip_sizes[1] = CLIP_SIZES[1];
         clip_sizes[2] = CLIP_SIZES[2];
+        GameObject.FindWithTag("Ammo").GetComponent<Text>().text = "1 / 1";
     }
 
     void Update() {
@@ -78,6 +79,7 @@ public class Weapon : MonoBehaviour {
                 }
                 break;
         }
+        UpdateUI();
     }
 
     void CheckKeyInput(Vector3 position) {
@@ -85,7 +87,6 @@ public class Weapon : MonoBehaviour {
         if (reloading[(int) curWeapon]) return;
         // If the key is pressed create a game object (bullet) and then add a velocity
         if (Input.GetKeyDown(KeyCode.Mouse0) && curWeapon != weapons.melee) {
-
 			GameObject gO = Instantiate(bullet, position, Quaternion.Euler(90, 0, 0)) as GameObject;
 			gO.GetComponent<Rigidbody>().AddForce(transform.forward * 200);
             shootSound.Play();
@@ -101,6 +102,7 @@ public class Weapon : MonoBehaviour {
             smg.SetActive(false);
             pistol.SetActive(false);
             melee.SetActive(true);
+            UpdateUI();
         }
         // Switch to Pistol
         else if (Input.GetKeyDown(KeyCode.Alpha2)) {
@@ -111,6 +113,7 @@ public class Weapon : MonoBehaviour {
             pistol.SetActive(true);
             bullet.tag = "PistolBullet";
             shootSound = pistol.GetComponent<AudioSource>();
+            UpdateUI();
         }
         // Switch to Shotgun
         else if (Input.GetKeyDown(KeyCode.Alpha3)) {
@@ -122,6 +125,7 @@ public class Weapon : MonoBehaviour {
             bullet.tag = "ShotgunBullet";
             anim = shotgun.GetComponent<Animator>();
             shootSound = shotgun.GetComponent<AudioSource>();
+            UpdateUI();
         }
         // Switch to SMG
         else if (Input.GetKeyDown(KeyCode.Alpha4)) {
@@ -133,8 +137,28 @@ public class Weapon : MonoBehaviour {
             bullet.tag = "SMGBullet";
             anim = smg.GetComponent<Animator>();
             shootSound = smg.GetComponent<AudioSource>();
+            UpdateUI();
         }
     }
+
+    void UpdateUI() {
+        string ammo = "";
+        switch(curWeapon) {
+            case weapons.melee:
+                ammo = "-/-";
+                break;
+            case weapons.pistol:
+                ammo = clip_sizes[0] + " / " + CLIP_SIZES[0];
+                break;
+            case weapons.shotgun:
+                ammo = clip_sizes[1] + " / " + CLIP_SIZES[1];
+                break;
+            case weapons.smg:
+                ammo = clip_sizes[2] + " / " + CLIP_SIZES[2];
+                break;
+        }
+		GameObject.FindWithTag("Ammo").GetComponent<Text>().text = ammo;
+	}
 
     // You just used a weapon, wait to shoot again.
 	IEnumerator WaitToShoot() {

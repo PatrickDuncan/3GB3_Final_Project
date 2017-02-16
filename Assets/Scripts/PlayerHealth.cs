@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour {
 
@@ -9,6 +10,7 @@ public class PlayerHealth : MonoBehaviour {
 
 	void Awake() {
 		health = 100;
+		GameObject.FindWithTag("HP").GetComponent<Text>().text = health.ToString() + " ❤";
 		myTransform = transform;
 		death = GameObject.FindWithTag("DeathScreen");
 		death.SetActive(false);
@@ -28,7 +30,7 @@ public class PlayerHealth : MonoBehaviour {
 		}
 	}
 
-	void Death() {
+	void DeathCheck() {
 		if (health < 1) {
 			death.SetActive(true);
 		}
@@ -48,6 +50,13 @@ public class PlayerHealth : MonoBehaviour {
 	        	health = 0;	// instant death
 				break;
 		}
-		Death();
+		UpdateUI();
+		DeathCheck();
+	}
+
+	void UpdateUI() {
+		GameObject.FindWithTag("HP").GetComponent<Text>().text = health > 0
+			? health.ToString() + " ❤"
+			: "0 ❤";
 	}
 }
