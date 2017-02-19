@@ -20,6 +20,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     const float WAIT_ATTACK = 4f;
 
     Animator anim;
+    public AudioClip dead;
     Transform myTransform;
     Transform playerTrans;
 
@@ -47,7 +48,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
             AttackPlayer();
         }
         // Move
-        else if (walking && !attacking) {
+        else if (walking && !attacking && !waitToAttack) {
             ChasePlayer();
             AddMovement();
         }
@@ -72,12 +73,13 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     void AddMovement() {
         Rigidbody rigid = GetComponent<Rigidbody>();
         if (rigid.velocity.sqrMagnitude < 25f) {
-            rigid.AddForce(myTransform.forward * 70, ForceMode.Impulse);
+            rigid.AddForce(myTransform.forward * 80, ForceMode.Impulse);
         }
     }
 
     void AttackPlayer() {
         anim.SetTrigger(attack);
+        GetComponent<AudioSource>().Play();
         GetComponent<Rigidbody>().AddForce(myTransform.forward * 600, ForceMode.Impulse);
         StartCoroutine(WaitToAttack());
     }
@@ -118,6 +120,10 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     void Death() {
         if (health < 1) {
             anim.SetTrigger(die);
+            AudioSource aS = GetComponent<AudioSource>();
+            aS.Stop();
+            aS.clip = dead;
+            aS.Play();
             gameObject.layer = 2;
             walking = false;
             attacking = false;

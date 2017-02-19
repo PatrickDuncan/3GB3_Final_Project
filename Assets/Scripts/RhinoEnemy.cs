@@ -17,6 +17,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
     const float WAIT_ATTACK = 6f;
 
     Animator anim;
+    public AudioClip dead;
     Transform myTransform;
     Transform playerTrans;
 
@@ -37,7 +38,6 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
         if (health < 1) return;
         if (!charging)
             ChasePlayer();
-        Debug.Log(attacking + " " + charging + " " + waitToAttack + " " + playerCollisions);
         if (!waitToAttack && (FacingPlayer() || charging)) {
             Charge();
         }
@@ -48,11 +48,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
         string tag = col.gameObject.tag;
         CheckCollisions(tag);
 
-        if (health < 1) {
-            anim.SetTrigger(die);
-            gameObject.layer = 2;
-            attacking = false;
-        }
+        Death();
     }
 
     void OnTriggerEnter(Collider col) {
@@ -69,10 +65,11 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
             attacking = true;
             charging = true;
             anim.SetTrigger(run);
+            GetComponent<AudioSource>().Play();
         }
         Rigidbody rigid = GetComponent<Rigidbody>();
         if (rigid.velocity.sqrMagnitude < 400f) {
-            rigid.AddForce(myTransform.forward * 1400, ForceMode.Impulse);
+            rigid.AddForce(myTransform.forward * 1200, ForceMode.Impulse);
         }
     }
 
@@ -86,25 +83,31 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
     }
 
     void CheckCollisions(string tag) {
+        Debug.Log(health);
         switch(tag) {
+            case "Door":
             case "Wall":
                 StartCoroutine(WaitToAttack());
                 anim.SetTrigger(walk);
+                GetComponent<AudioSource>().Stop();
                 break;
             case "PistolBullet":
                 health -= 15;
                 anim.SetTrigger(hurt);
-                anim.SetTrigger(attacking ? run : walk);
+                if (health > 0) // fixes async issue with death animation
+                    anim.SetTrigger(attacking ? run : walk);
                 break;
             case "ShotgunBullet":
-                health -= 35;
+                health -= 40;
                 anim.SetTrigger(hurt);
-                anim.SetTrigger(attacking ? run : walk);
+                if (health > 0) // fixes async issue with death animation
+                    anim.SetTrigger(attacking ? run : walk);
                 break;
             case "SMGBullet":
                 health -= 8;
                 anim.SetTrigger(hurt);
-                anim.SetTrigger(attacking ? run : walk);
+                if (health > 0) // fixes async issue with death animation
+                    anim.SetTrigger(attacking ? run : walk);
                 break;
             case "Player":
                 if (playerCollisions > 0)
@@ -112,6 +115,20 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
                 ++playerCollisions;
                 break;
 		}
+    }
+
+    void Death() {
+        if (health < 1) {
+            anim.SetTrigger(die);
+            AudioSource aS = GetComponent<AudioSource>();
+            aS.Stop();
+            aS.loop = false;
+            aS.clip = dead;
+            aS.Play();
+            gameObject.layer = 2;
+            attacking = false;
+            charging = false;
+        }
     }
 
     bool FacingPlayer() {
