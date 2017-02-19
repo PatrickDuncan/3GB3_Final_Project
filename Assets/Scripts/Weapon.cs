@@ -9,7 +9,7 @@ public class Weapon : MonoBehaviour {
     bool[] reloading = {false, false, false, false};
     int[] CLIP_SIZES = {8, 1, 15};
     int[] clip_sizes = new int[3];
-    int[] ammo_sizes = {2, 3, 5};   // the amount of bullet is this + clip_sizes
+    int[] ammo_ammounts = {8, 7, 15};   // the amount of bullet is this + clip_sizes
     float[] WAIT_TIMES = {0.3f, 0.4f, 1.6f, 0.05f};
 
     public GameObject bullet;	// Assign the bullet prefab in the editor
@@ -45,7 +45,7 @@ public class Weapon : MonoBehaviour {
         clip_sizes[0] = CLIP_SIZES[0];
         clip_sizes[1] = CLIP_SIZES[1];
         clip_sizes[2] = CLIP_SIZES[2];
-        GameObject.FindWithTag("Ammo").GetComponent<Text>().text = " 1 / " + ammo_sizes[1] + " ";
+        GameObject.FindWithTag("Ammo").GetComponent<Text>().text = " 1 / " + ammo_ammounts[1] + " ";
     }
 
     void Update() {
@@ -78,8 +78,8 @@ public class Weapon : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Mouse0) && curWeapon != weapons.melee) {
             // can't shoot if there's no ammo of that weapon's type
             if ((current == 1 && clip_sizes[current - 1] == 0)
-            || (current == 2 && clip_sizes[current - 1] == 0)
-            || (current == 3 && clip_sizes[current - 1] == 0)) {
+             || (current == 2 && clip_sizes[current - 1] == 0)
+             || (current == 3 && clip_sizes[current - 1] == 0)) {
                 return;
             }
 			GameObject gO = Instantiate(bullet, position, Quaternion.Euler(90, 0, 0)) as GameObject;
@@ -143,18 +143,18 @@ public class Weapon : MonoBehaviour {
     void GunReloading(int i) {
         --clip_sizes[i];
         UpdateUI();
-        if (clip_sizes[i] == 0 && ammo_sizes[i] > 0) {
+        if (clip_sizes[i] == 0 && ammo_ammounts[i] > 0) {
             anim.SetTrigger("Reload");
             StartCoroutine(WaitReload(i + 1));
-            int subtration = ammo_sizes[i] - CLIP_SIZES[i];
-            int amount = subtration > 0 ? subtration : ammo_sizes[i];
+            int subtration = ammo_ammounts[i] - CLIP_SIZES[i];
+            int amount = subtration > 0 ? subtration : ammo_ammounts[i];
             // If ammo is more than max clip size then subtract it, if not make it 0
-            ammo_sizes[i] = subtration > 0 ? subtration : 0;
+            ammo_ammounts[i] = subtration > 0 ? subtration : 0;
             // Current clip size is the max clip size, the left overs, or 0
             clip_sizes[i] = amount > 0
                 ? (amount > CLIP_SIZES[i] ? CLIP_SIZES[i] : amount)
                 : 0;
-        } else if (ammo_sizes[i] == 0 && i == 1) {
+        } else if (ammo_ammounts[i] == 0 && i == 1) {
             anim.SetTrigger("Reload");
         }
     }
@@ -163,13 +163,13 @@ public class Weapon : MonoBehaviour {
         string ammo = "";
         switch(curWeapon) {
             case weapons.pistol:
-                ammo = " " + clip_sizes[0] + " / " + ammo_sizes[0] + " ";
+                ammo = " " + clip_sizes[0] + " / " + ammo_ammounts[0] + " ";
                 break;
             case weapons.shotgun:
-                ammo = " " + clip_sizes[1] + " / " + ammo_sizes[1] + " ";
+                ammo = " " + clip_sizes[1] + " / " + ammo_ammounts[1] + " ";
                 break;
             case weapons.smg:
-                ammo = (clip_sizes[2] < 10 ? " " : "") + clip_sizes[2] + " / " + ammo_sizes[2];
+                ammo = (clip_sizes[2] < 10 ? " " : "") + clip_sizes[2] + " / " + ammo_ammounts[2];
                 break;
         }
 		GameObject.FindWithTag("Ammo").GetComponent<Text>().text = ammo;

@@ -31,9 +31,9 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         playerCollisions = 0;
 		anim = GetComponent<Animator>();
 		attack = Animator.StringToHash("Basic Attack");
+        die = Animator.StringToHash("Die");
 		hurt = Animator.StringToHash("Get Hit");
 		walk = Animator.StringToHash("Walk");
-		die = Animator.StringToHash("Die");
         anim.SetTrigger(walk);
         myTransform = transform;
         playerTrans = GameObject.FindWithTag("Player").transform;

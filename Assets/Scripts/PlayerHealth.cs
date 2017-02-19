@@ -18,15 +18,14 @@ public class PlayerHealth : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col) {
 		if (health < 1) return;
-		GetHurt(col.gameObject.tag);
+		GetHurt(col.gameObject);
 	}
 
 	void OnCollisionEnter(Collision col) {
 		if (health < 1) return;
-		string tag = col.gameObject.tag;
-		if (tag.Contains("Enemy")
-		&& col.gameObject.GetComponent<LizardEnemy>().GetAttacking()) {
-			GetHurt(tag);
+		GameObject gO = col.gameObject;
+		if (gO.tag.Contains("Enemy")) {
+			GetHurt(gO);
 		}
 	}
 
@@ -40,10 +39,15 @@ public class PlayerHealth : MonoBehaviour {
 		return health;
 	}
 
-	void GetHurt(string tag) {
-		switch(tag) {
+	void GetHurt(GameObject gO) {
+		switch(gO.tag) {
 			case "LizardEnemy":
-				health -= 15;
+				if (gO.GetComponent<LizardEnemy>().GetAttacking())
+					health -= 15;
+				break;
+			case "RhinoEnemy":
+				if (gO.GetComponent<RhinoEnemy>().GetAttacking())
+					health -= 30;
 				break;
 			case "Fire":
 				GetComponent<Rigidbody>().isKinematic = true;
