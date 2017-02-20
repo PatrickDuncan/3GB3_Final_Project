@@ -83,7 +83,6 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
     }
 
     void CheckCollisions(string tag) {
-        Debug.Log(health);
         switch(tag) {
             case "Door":
             case "Wall":
@@ -93,19 +92,17 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
                 break;
             case "PistolBullet":
                 health -= 15;
-                anim.SetTrigger(hurt);
                 if (health > 0) // fixes async issue with death animation
                     anim.SetTrigger(attacking ? run : walk);
                 break;
             case "ShotgunBullet":
                 health -= 40;
-                anim.SetTrigger(hurt);
+                anim.SetTrigger(hurt);  // only the shotgun makes it flinch
                 if (health > 0) // fixes async issue with death animation
                     anim.SetTrigger(attacking ? run : walk);
                 break;
             case "SMGBullet":
                 health -= 8;
-                anim.SetTrigger(hurt);
                 if (health > 0) // fixes async issue with death animation
                     anim.SetTrigger(attacking ? run : walk);
                 break;

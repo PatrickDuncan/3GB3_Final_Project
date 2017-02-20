@@ -6,13 +6,17 @@ using System.Collections;
 public class AirBlast : MonoBehaviour {
 
     bool allowedToShoot = true;
+    int blastAnim;
     const float DISPPEAR_TIME = 0.8f;
     const float WAIT_TIME = 5f;
 
-    public GameObject airWall;
+    Animator anim;
     AudioSource shootSound;
+    public GameObject airWall;
 
     void Start() {
+        anim = GameObject.FindWithTag("AirPushHand").GetComponent<Animator>();
+        blastAnim = Animator.StringToHash("Push");
         shootSound = GameObject.FindWithTag("AirBlastOrigin").GetComponent<AudioSource>();
     }
 
@@ -20,6 +24,7 @@ public class AirBlast : MonoBehaviour {
         if (!allowedToShoot) return;
         // If the key is pressed create a game object (wall) and then add a velocity
         if (Input.GetKeyDown(KeyCode.Mouse1)) {
+            anim.SetTrigger(blastAnim);
             Vector3 position = GameObject.FindWithTag("AirBlastOrigin").transform.position;
             Quaternion rotation = GameObject.FindWithTag("MainCamera").transform.rotation;
             GameObject gO = Instantiate(airWall, position, rotation) as GameObject;

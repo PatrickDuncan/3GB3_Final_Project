@@ -17,7 +17,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
 	int die;
     const float MAXVELOCITY = 12f;
     const float TURNSPEED = 2f;
-    const float WAIT_ATTACK = 4f;
+    const float WAIT_ATTACK = 3.25f;
 
     Animator anim;
     public AudioClip dead;
@@ -97,20 +97,22 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         switch(tag) {
             case "PistolBullet":
                 health -= 20;
-                anim.SetTrigger(hurt);
+                if (!waitToAttack)
+                    anim.SetTrigger(hurt);
                 break;
             case "ShotgunBullet":
                 health -= 50;
-                anim.SetTrigger(hurt);
+                if (!waitToAttack)
+                    anim.SetTrigger(hurt);
                 break;
             case "SMGBullet":
                 health -= 10;
-                anim.SetTrigger(hurt);
+                if (!waitToAttack)
+                    anim.SetTrigger(hurt);
                 break;
             case "Player":
-                if (playerCollisions > 0) {
+                if (playerCollisions > 0)
                     attacking = false;
-                }
                 ++playerCollisions;
                 break;
         }
@@ -137,7 +139,10 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
             Math.Pow(myTransform.position.z - playerTrans.position.z, 2)
         ) < 16;
         // http://answers.unity3d.com/questions/503934/chow-to-check-if-an-object-is-facing-another.html
-        float rotationDiff = Vector3.Dot(myTransform.forward, (playerTrans.position - myTransform.position).normalized);
+        float rotationDiff = Vector3.Dot(
+            myTransform.forward,
+            (playerTrans.position - myTransform.position).normalized
+        );
         return closeEnough && rotationDiff > 0.8;
     }
 
