@@ -12,3 +12,5 @@
 - Made the tubes shatter when shot or charged into by the rhino
 - Implemented ray casting so the enemies only chase the player when they can see
   him. i.e. don't move if a wall is in-between them. The ray will ignore other enemies
+- Added a shooting animation for the SMG
+- Shooting is now continuous

@@ -10,16 +10,17 @@ public class Weapon : MonoBehaviour {
     int[] CLIP_SIZES = {8, 1, 15};
     int[] clip_sizes = new int[3];
     int[] ammo_ammounts = {8, 7, 15};   // the amount of bullet is this + clip_sizes
-    float[] WAIT_TIMES = {0.3f, 0.4f, 1.6f, 0.05f};
+    float[] WAIT_TIMES = {0.3f, 0.4f, 1.6f, 0.075f};
 
+    Animator anim;
+    AudioSource shootSound;
     public GameObject bullet;	// Assign the bullet prefab in the editor
     GameObject melee;
     GameObject pistol;
     GameObject smg;
     GameObject shotgun;
-    Animator anim;
-    AudioSource shootSound;
     PlayerHealth playerHealth;
+    Transform myTransform;
 
     enum weapons {
         melee,
@@ -30,6 +31,7 @@ public class Weapon : MonoBehaviour {
     weapons curWeapon;
 
     void Start() {
+        myTransform = transform;
         curWeapon = weapons.shotgun;
         melee = GameObject.FindWithTag("Knife");
         pistol = GameObject.FindWithTag("Pistol");
@@ -49,7 +51,8 @@ public class Weapon : MonoBehaviour {
     }
 
     void Update() {
-        if (shooting) return;
+        if (shooting)
+            return;
         Vector3 wep = GameObject.FindWithTag("Center").transform.position;
         Vector3 position = new Vector3(wep.x, wep.y, wep.z);
         CheckKeyInput(position);
@@ -74,8 +77,8 @@ public class Weapon : MonoBehaviour {
         // Stuck in reloading animation and can't shoot while dead
         if (reloading[current] || playerHealth.GetHealth() < 1)
             return;
-        // If the key is pressed create a game object (bullet) and then add a velocity
-        if (Input.GetKeyDown(KeyCode.Mouse0) && curWeapon != weapons.melee) {
+        // If the key is pressed create a game object (bullet) and then apply a force
+        if (Input.GetKey(KeyCode.Mouse0) && curWeapon != weapons.melee) {
             // can't shoot if there's no ammo of that weapon's type
             if ((current == 1 && clip_sizes[current - 1] == 0)
              || (current == 2 && clip_sizes[current - 1] == 0)
@@ -83,12 +86,15 @@ public class Weapon : MonoBehaviour {
                 return;
             }
 			GameObject gO = Instantiate(bullet, position, Quaternion.Euler(90, 0, 0)) as GameObject;
-			gO.GetComponent<Rigidbody>().AddForce(transform.forward * 200);
+			gO.GetComponent<Rigidbody>().AddForce(myTransform.forward * 200);
             shootSound.Play();
 
             Ammunition();
-            if (reloading[current]) return; // Ammunition has a side effect on reloading[current]
-            if (curWeapon != weapons.smg && curWeapon != weapons.shotgun )
+            // Ammunition has a side effect on reloading[current]
+            if (reloading[current])
+                return;
+
+            if (curWeapon != weapons.shotgun)
                 anim.SetTrigger("Shoot");
 
             StartCoroutine(WaitToShoot());
@@ -144,7 +150,10 @@ public class Weapon : MonoBehaviour {
         --clip_sizes[i];
         UpdateUI();
         if (clip_sizes[i] == 0 && ammo_ammounts[i] > 0) {
-            anim.SetTrigger("Reload");
+            if (curWeapon != weapons.smg)
+                anim.SetTrigger("Reload");
+            else
+                smg.transform.Find("ScifiRifle").GetComponent<Animator>().SetTrigger("Reload");
             StartCoroutine(WaitReload(i + 1));
             int subtration = ammo_ammounts[i] - CLIP_SIZES[i];
             int amount = subtration > 0 ? subtration : ammo_ammounts[i];
