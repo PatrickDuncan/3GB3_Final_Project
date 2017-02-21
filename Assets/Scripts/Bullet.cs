@@ -2,14 +2,12 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour {
 
-	private void Start () {
-		Destroy(gameObject, 5f);			// Automatically destroy the bulletType in 3 seconds
+	void Start() {
+		Destroy(gameObject, 5f);
 	}
 
-	private void OnCollisionEnter(Collision col) {
-		string tag = col.gameObject.tag;
-		if (tag != "Player") {
+	void OnCollisionEnter(Collision col) {
+		if (col.gameObject.tag != "Player")
         	Destroy(gameObject);    // auto destroy on impact
-		}
 	}
 }

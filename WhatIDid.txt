@@ -1,0 +1,12 @@
+- Health Points Overlay
+- Ammunition Overlay
+- Fixed Weapon Clipping by adding multiple cameras
+- Created pistol reload/shoot animation
+- Player can now run out of bullets
+- Created the non-staging scene
+- The Rhino now charges at the player and stops when it hits a wall
+- Sounds for the enemies
+- Added a hand model (http://armedunity.com/files/file/93-fps-arms-pack-updated/)
+- Created animations for that hand when doing the air push
+- Created a fully functional door
+- Made the tubes shatter when shot or charged into by the rhino

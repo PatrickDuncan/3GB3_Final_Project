@@ -7,15 +7,9 @@ public class BreakTube : MonoBehaviour {
 
 	void OnCollisionEnter(Collision col) {
     	if (col.gameObject.tag.Contains("Bullet") || col.gameObject.tag.Contains("Rhino")) {
-            GetComponent<AudioSource>().Play();
             GameObject gO = Instantiate(broken, transform.position, Quaternion.identity) as GameObject;
-            StartCoroutine(WaitToDestory());
+            gO.GetComponent<AudioSource>().Play();
+            Destroy(gameObject);
         }
 	}
-
-    // Waiting so player can hear the shatter
-    IEnumerator WaitToDestory() {
-        yield return new WaitForSeconds(0.4f);
-        Destroy(gameObject);
-    }
 }
