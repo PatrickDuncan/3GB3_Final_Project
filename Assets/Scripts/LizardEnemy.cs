@@ -17,7 +17,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
 	int die;
     const float MAXVELOCITY = 12f;
     const float TURNSPEED = 2f;
-    const float WAIT_ATTACK = 3.25f;
+    const float WAIT_ATTACK = 3.5f;
 
     Animator anim;
     public AudioClip dead;
@@ -41,10 +41,10 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
 	}
 
     void FixedUpdate() {
-        if (health < 1) return;
+        if (health < 1 || UpdateConditions()) return;
         playerTrans = GameObject.FindWithTag("Player").transform;
         // Attack the player
-        if (PlayerProximity() && !attacking && !waitToAttack) {
+        if (AttackConditions() && !attacking && !waitToAttack) {
             AttackPlayer();
         }
         // Move
@@ -132,7 +132,21 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         }
     }
 
-    bool PlayerProximity() {
+    bool UpdateConditions() {
+        RaycastHit hit;
+        int layer_mask = ~(1 << gameObject.layer);  // bit shift then invert
+        Physics.Linecast(
+            myTransform.position,
+            playerTrans.position,
+            out hit,
+            layer_mask
+        );
+        bool blocked = hit.collider.gameObject.name != "Player";
+        return blocked;
+    }
+
+    // If close enough to the player to attack and looking at the player
+    bool AttackConditions() {
         bool closeEnough = Math.Sqrt(
             Math.Pow(myTransform.position.x - playerTrans.position.x, 2)
             +
