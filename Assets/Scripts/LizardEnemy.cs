@@ -41,7 +41,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
 	}
 
     void FixedUpdate() {
-        if (health < 1 || UpdateConditions()) return;
+        if (health < 1 || DontUpdate()) return;
         playerTrans = GameObject.FindWithTag("Player").transform;
         // Attack the player
         if (AttackConditions() && !attacking && !waitToAttack) {
@@ -132,17 +132,25 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         }
     }
 
-    bool UpdateConditions() {
+    bool DontUpdate() {
         RaycastHit hit;
         int layer_mask = ~(1 << gameObject.layer);  // bit shift then invert
-        Physics.Linecast(
-            myTransform.position,
-            playerTrans.position,
-            out hit,
-            layer_mask
+        Vector3 fixedSelf = new Vector3(
+            myTransform.position.x,
+            myTransform.position.y + 1f,
+            myTransform.position.z
         );
-        bool blocked = hit.collider.gameObject.name != "Player";
-        return blocked;
+        Vector3 fixedPlayerPos = new Vector3(
+            playerTrans.position.x,
+            playerTrans.position.y + 3f,
+            playerTrans.position.z
+        );
+        if (Physics.Linecast(myTransform.position, fixedPlayerPos, out hit, layer_mask)) {
+            Debug.Log(hit.collider.gameObject.name);
+            return hit.collider.gameObject.name != "Player";
+        }
+        else
+            return true;
     }
 
     // If close enough to the player to attack and looking at the player
