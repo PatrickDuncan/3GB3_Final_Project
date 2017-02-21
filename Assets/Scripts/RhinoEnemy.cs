@@ -35,7 +35,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
 	}
 
     void FixedUpdate() {
-        if (health < 1) return;
+        if (health < 1 || DontUpdate()) return;
         if (!charging)
             ChasePlayer();
         if (!waitToAttack && (FacingPlayer() || charging)) {
@@ -68,8 +68,8 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
             GetComponent<AudioSource>().Play();
         }
         Rigidbody rigid = GetComponent<Rigidbody>();
-        if (rigid.velocity.sqrMagnitude < 400f) {
-            rigid.AddForce(myTransform.forward * 1200, ForceMode.Impulse);
+        if (rigid.velocity.sqrMagnitude < 500f) {
+            rigid.AddForce(myTransform.forward * 1400, ForceMode.Impulse);
         }
     }
 
@@ -126,6 +126,20 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
             attacking = false;
             charging = false;
         }
+    }
+
+    bool DontUpdate() {
+        RaycastHit hit;
+        int layer_mask = ~(1 << gameObject.layer);  // bit shift then invert
+        Vector3 fixedPlayerPos = new Vector3(
+            playerTrans.position.x,
+            playerTrans.position.y + 3f,
+            playerTrans.position.z
+        );
+        if (Physics.Linecast(myTransform.position, fixedPlayerPos, out hit, layer_mask))
+            return hit.collider.gameObject.name != "Player";
+        else
+            return true;
     }
 
     bool FacingPlayer() {

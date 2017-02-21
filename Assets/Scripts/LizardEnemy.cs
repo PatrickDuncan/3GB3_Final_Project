@@ -145,10 +145,8 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
             playerTrans.position.y + 3f,
             playerTrans.position.z
         );
-        if (Physics.Linecast(myTransform.position, fixedPlayerPos, out hit, layer_mask)) {
-            Debug.Log(hit.collider.gameObject.name);
+        if (Physics.Linecast(fixedSelf, fixedPlayerPos, out hit, layer_mask))
             return hit.collider.gameObject.name != "Player";
-        }
         else
             return true;
     }
