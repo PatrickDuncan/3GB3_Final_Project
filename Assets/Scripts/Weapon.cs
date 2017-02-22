@@ -10,9 +10,13 @@ public class Weapon : MonoBehaviour {
     int[] CLIP_SIZES = {8, 1, 15};
     int[] clip_sizes = new int[3];
     int[] ammo_ammounts = {8, 7, 15};   // the amount of bullet is this + clip_sizes
-    float[] WAIT_TIMES = {0.3f, 0.4f, 1.6f, 0.075f};
+    float[] WAIT_TIMES = {0.3f, 0.3f, 1.6f, 0.075f};
 
     Animator anim;
+    public AudioClip pistol_reload_clip;
+    public AudioClip pistol_shoot_clip;
+    public AudioClip smg_reload_clip;
+    public AudioClip smg_shoot_clip;
     AudioSource shootSound;
     public GameObject bullet;	// Assign the bullet prefab in the editor
     GameObject melee;
@@ -149,11 +153,21 @@ public class Weapon : MonoBehaviour {
     void GunReloading(int i) {
         --clip_sizes[i];
         UpdateUI();
+        // Reload the gun
         if (clip_sizes[i] == 0 && ammo_ammounts[i] > 0) {
-            if (curWeapon != weapons.smg)
+            if (curWeapon != weapons.smg) {
                 anim.SetTrigger("Reload");
-            else
+                if (curWeapon == weapons.pistol) {
+                    AudioSource aS = pistol.GetComponent<AudioSource>();
+                    aS.clip = pistol_reload_clip;
+                    aS.Play();
+                }
+            } else {
+                AudioSource aS = smg.GetComponent<AudioSource>();
                 smg.transform.Find("ScifiRifle").GetComponent<Animator>().SetTrigger("Reload");
+                aS.clip = smg_reload_clip;
+                aS.Play();
+            }
             StartCoroutine(WaitReload(i + 1));
             int subtration = ammo_ammounts[i] - CLIP_SIZES[i];
             int amount = subtration > 0 ? subtration : ammo_ammounts[i];
@@ -163,7 +177,9 @@ public class Weapon : MonoBehaviour {
             clip_sizes[i] = amount > 0
                 ? (amount > CLIP_SIZES[i] ? CLIP_SIZES[i] : amount)
                 : 0;
-        } else if (ammo_ammounts[i] == 0 && i == 1) {
+        }
+        // Shotgun reloads when others don't
+        else if (ammo_ammounts[i] == 0 && i == 1) {
             anim.SetTrigger("Reload");
         }
     }
@@ -195,6 +211,11 @@ public class Weapon : MonoBehaviour {
         reloading[i] = true;
         yield return new WaitForSeconds(1.6f);
         UpdateUI();
+        // Reset audio sources to the shooting clips
+        if (curWeapon == weapons.pistol)
+            pistol.GetComponent<AudioSource>().clip = pistol_shoot_clip;
+        else if (curWeapon == weapons.smg)
+            smg.GetComponent<AudioSource>().clip = smg_shoot_clip;
      	reloading[i] = false;
     }
 }

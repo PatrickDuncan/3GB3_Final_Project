@@ -14,3 +14,4 @@
   him. i.e. don't move if a wall is in-between them. The ray will ignore other enemies
 - Added a shooting animation for the SMG
 - Shooting is now continuous
+- Added reload sounds
