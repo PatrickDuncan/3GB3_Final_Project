@@ -6,6 +6,7 @@ using System.Collections;
 public class Weapon : MonoBehaviour {
 
     bool shooting = false;
+    bool waitToSwing = false;
     bool[] reloading = {false, false, false, false};
     int[] CLIP_SIZES = {8, 1, 15};
     int[] clip_sizes = new int[3];
@@ -57,8 +58,8 @@ public class Weapon : MonoBehaviour {
     }
 
     void Update() {
-        if (shooting || playerHealth.GetHealth() < 1
-            || reloading[(int) curWeapon] || waveLogic.Won())
+        if (shooting || playerHealth.GetHealth() < 1 || reloading[(int) curWeapon]
+            || waveLogic.Won() || waitToSwing)
             return;
         CheckKeyInput(GameObject.FindWithTag("Center").transform.position);
     }
@@ -222,8 +223,10 @@ public class Weapon : MonoBehaviour {
     // You just used a weapon, wait to shoot again.
 	IEnumerator WaitToShoot() {
         shooting = true;
+        waitToSwing = true;
         yield return new WaitForSeconds(WAIT_TIMES[(int) curWeapon]);
      	shooting = false;
+     	waitToSwing = false;
     }
 
 	IEnumerator WaitReload(int i) {
