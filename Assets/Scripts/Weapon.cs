@@ -9,7 +9,7 @@ public class Weapon : MonoBehaviour {
     bool[] reloading = {false, false, false, false};
     int[] CLIP_SIZES = {8, 1, 15};
     int[] clip_sizes = new int[3];
-    int[] ammo_ammounts = {8, 7, 15};   // the amount of bullet is this + clip_sizes
+    int[] ammo_ammounts = {20, 12, 30};   // the amount of bullet is this + clip_sizes
     float[] WAIT_TIMES = {0.3f, 0.3f, 1.6f, 0.075f};
 
     Animator anim;

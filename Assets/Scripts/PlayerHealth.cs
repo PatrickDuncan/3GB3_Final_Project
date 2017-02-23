@@ -6,23 +6,26 @@ public class PlayerHealth : MonoBehaviour {
 	int health;
 
 	Transform myTransform;
-	GameObject death;
+	GameObject[] death;
 
 	void Awake() {
 		health = 100;
 		GameObject.FindWithTag("HP").GetComponent<Text>().text = health.ToString() + " ❤";
 		myTransform = transform;
-		death = GameObject.FindWithTag("DeathScreen");
-		death.SetActive(false);
+		death = GameObject.FindGameObjectsWithTag("DeathScreen");
+		foreach (GameObject gO in death)
+			gO.SetActive(false);
 	}
 
 	void OnTriggerEnter(Collider col) {
-		if (health < 1) return;
+		if (health < 1)
+			return;
 		GetHurt(col.gameObject);
 	}
 
 	void OnCollisionEnter(Collision col) {
-		if (health < 1) return;
+		if (health < 1)
+			return;
 		GameObject gO = col.gameObject;
 		if (gO.tag.Contains("Enemy")) {
 			GetHurt(gO);
@@ -31,7 +34,8 @@ public class PlayerHealth : MonoBehaviour {
 
 	void DeathCheck() {
 		if (health < 1) {
-			death.SetActive(true);
+			foreach (GameObject gO in death)
+				gO.SetActive(true);
 		}
 	}
 
