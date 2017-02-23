@@ -57,9 +57,7 @@ public class Weapon : MonoBehaviour {
     void Update() {
         if (shooting)
             return;
-        Vector3 wep = GameObject.FindWithTag("Center").transform.position;
-        Vector3 position = new Vector3(wep.x, wep.y, wep.z);
-        CheckKeyInput(position);
+        CheckKeyInput(GameObject.FindWithTag("Center").transform.position);
     }
 
     void Ammunition() {
@@ -169,14 +167,12 @@ public class Weapon : MonoBehaviour {
                 aS.Play();
             }
             StartCoroutine(WaitReload(i + 1));
-            int subtration = ammo_ammounts[i] - CLIP_SIZES[i];
-            int amount = subtration > 0 ? subtration : ammo_ammounts[i];
+
+            int newTotal = ammo_ammounts[i] - CLIP_SIZES[i];
             // If ammo is more than max clip size then subtract it, if not make it 0
-            ammo_ammounts[i] = subtration > 0 ? subtration : 0;
+            ammo_ammounts[i] = newTotal > 0 ? newTotal : 0;
             // Current clip size is the max clip size, the left overs, or 0
-            clip_sizes[i] = amount > 0
-                ? (amount > CLIP_SIZES[i] ? CLIP_SIZES[i] : amount)
-                : 0;
+            clip_sizes[i] = newTotal >= 0 ? CLIP_SIZES[i] : Math.Abs(newTotal);
         }
         // Shotgun reloads when others don't
         else if (ammo_ammounts[i] == 0 && i == 1) {
