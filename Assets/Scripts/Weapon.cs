@@ -9,7 +9,7 @@ public class Weapon : MonoBehaviour {
     bool[] reloading = {false, false, false, false};
     int[] CLIP_SIZES = {8, 1, 15};
     int[] clip_sizes = new int[3];
-    int[] ammo_ammounts = {20, 12, 30};   // the amount of bullet is this + clip_sizes
+    int[] ammo_ammounts = {80, 50, 180};   // the amount of bullet is this + clip_sizes
     float[] WAIT_TIMES = {0.3f, 0.3f, 1.6f, 0.075f};
 
     Animator anim;
@@ -24,6 +24,7 @@ public class Weapon : MonoBehaviour {
     GameObject smg;
     GameObject shotgun;
     PlayerHealth playerHealth;
+    WaveLogic waveLogic;
     Transform myTransform;
 
     enum weapons {
@@ -42,6 +43,7 @@ public class Weapon : MonoBehaviour {
         shotgun = GameObject.FindWithTag("Shotgun");
         smg = GameObject.FindWithTag("SubmachineGun");
         playerHealth = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
+        waveLogic = GameObject.FindWithTag("Wave Logic").GetComponent<WaveLogic>();
         melee.SetActive(false);
         pistol.SetActive(false);
         smg.SetActive(false);
@@ -55,7 +57,8 @@ public class Weapon : MonoBehaviour {
     }
 
     void Update() {
-        if (shooting)
+        if (shooting || playerHealth.GetHealth() < 1
+            || reloading[(int) curWeapon] || waveLogic.Won())
             return;
         CheckKeyInput(GameObject.FindWithTag("Center").transform.position);
     }
@@ -77,8 +80,6 @@ public class Weapon : MonoBehaviour {
     void CheckKeyInput(Vector3 position) {
         int current = (int) curWeapon;
         // Stuck in reloading animation and can't shoot while dead
-        if (reloading[current] || playerHealth.GetHealth() < 1)
-            return;
         // If the key is pressed create a game object (bullet) and then apply a force
         if (Input.GetKey(KeyCode.Mouse0) && curWeapon != weapons.melee) {
             // can't shoot if there's no ammo of that weapon's type

@@ -4,6 +4,7 @@ using System.Collections;
 
 public class WaveLogic : MonoBehaviour {
 
+    bool won;
     int currentWave;
     int[] waveCounter;
     const float WAIT_TEXT = 2f;
@@ -15,6 +16,7 @@ public class WaveLogic : MonoBehaviour {
     GameObject[] wave4;
 
     void Start() {
+        won = false;
         currentWave = -1;
         waveCounter = new int[4];
         // Get all waves
@@ -50,19 +52,28 @@ public class WaveLogic : MonoBehaviour {
     public void EnemyKilled() {
         --waveCounter[currentWave];
         // next wave and there are more levels
-        if (waveCounter[currentWave] == 0 && currentWave < 4)
+        if (waveCounter[currentWave] == 0 && currentWave < 0) {
             StartCoroutine(WaveStartText());
+            UpdateUI();
+        }
         // Game complete
         else if (waveCounter[currentWave] == 0) {
+            won = true;
+            GameObject.FindWithTag("Wave").GetComponent<Text>().text = "0 Remaining";
             gameStart.GetComponent<Text>().text = "You Survived";
             gameStart.SetActive(true);
+        } else {
+            UpdateUI();
         }
-        UpdateUI();
     }
 
     void UpdateUI() {
         string text = waveCounter[currentWave] + " Remaining";
         GameObject.FindWithTag("Wave").GetComponent<Text>().text = text;
+    }
+
+    public bool Won() {
+        return won;
     }
 
     IEnumerator WaveStartText() {

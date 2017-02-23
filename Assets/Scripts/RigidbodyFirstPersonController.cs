@@ -67,12 +67,13 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         public MouseLook mouseLook = new MouseLook();
         public AdvancedSettings advancedSettings = new AdvancedSettings();
 
-        private Rigidbody m_RigidBody;
-        private CapsuleCollider m_Capsule;
-        private float m_YRotation;
-        private Vector3 m_GroundContactNormal;
-        private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
-        private PlayerHealth playerHealth;
+        Rigidbody m_RigidBody;
+        CapsuleCollider m_Capsule;
+        float m_YRotation;
+        Vector3 m_GroundContactNormal;
+        bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
+        PlayerHealth playerHealth;
+        WaveLogic waveLogic;
 
         public Vector3 Velocity {
             get { return m_RigidBody.velocity; }
@@ -97,10 +98,12 @@ namespace UnityStandardAssets.Characters.FirstPerson {
             m_Capsule = GetComponent<CapsuleCollider>();
             mouseLook.Init (transform, cam.transform);
             playerHealth = GetComponent<PlayerHealth>();
+            waveLogic = GameObject.FindWithTag("Wave Logic").GetComponent<WaveLogic>();
         }
 
         private void Update() {
-            if (playerHealth.GetHealth() < 1) return;
+            if (playerHealth.GetHealth() < 1 || waveLogic.Won())
+                return;
             RotateView();
 
             if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump) {
@@ -109,7 +112,8 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         }
 
         private void FixedUpdate() {
-            if (playerHealth.GetHealth() < 1) return;
+            if (playerHealth.GetHealth() < 1 || waveLogic.Won())
+                return;
             GroundCheck();
             Vector2 input = GetInput();
 
