@@ -9,8 +9,8 @@ public class Weapon : MonoBehaviour {
     bool[] reloading = {false, false, false, false};
     int[] CLIP_SIZES = {8, 1, 15};
     int[] clip_sizes = new int[3];
-    int[] ammo_ammounts = {80, 50, 180};   // the amount of bullet is this + clip_sizes
-    float[] WAIT_TIMES = {0.3f, 0.3f, 1.6f, 0.075f};
+    int[] ammo_ammounts = {80, 50, 210};   // the amount of bullet is this + clip_sizes
+    float[] WAIT_TIMES = {1f, 0.3f, 1.6f, 0.075f};
 
     Animator anim;
     public AudioClip pistol_reload_clip;
@@ -102,6 +102,14 @@ public class Weapon : MonoBehaviour {
 
             StartCoroutine(WaitToShoot());
 		}
+
+        // If key is pressed and you're holding the knife
+        else if (Input.GetKey(KeyCode.Mouse0)) {
+            anim.SetTrigger("Shoot");
+            shootSound.Play();
+            StartCoroutine(WaitToShoot());
+        }
+
         // Switch to Knife
         else if (Input.GetKeyDown(KeyCode.Alpha1) && current != 0) {
             curWeapon = weapons.melee;
@@ -109,8 +117,11 @@ public class Weapon : MonoBehaviour {
             smg.SetActive(false);
             pistol.SetActive(false);
             melee.SetActive(true);
+            anim = melee.GetComponent<Animator>();
+            shootSound = melee.GetComponent<AudioSource>();
             UpdateUI();
         }
+
         // Switch to Pistol
         else if (Input.GetKeyDown(KeyCode.Alpha2) && current != 1) {
             curWeapon = weapons.pistol;
@@ -123,6 +134,7 @@ public class Weapon : MonoBehaviour {
             shootSound = pistol.GetComponent<AudioSource>();
             UpdateUI();
         }
+
         // Switch to Shotgun
         else if (Input.GetKeyDown(KeyCode.Alpha3) && current != 2) {
             curWeapon = weapons.shotgun;
@@ -135,6 +147,7 @@ public class Weapon : MonoBehaviour {
             shootSound = shotgun.GetComponent<AudioSource>();
             UpdateUI();
         }
+
         // Switch to SMG
         else if (Input.GetKeyDown(KeyCode.Alpha4) && current != 3) {
             curWeapon = weapons.smg;
@@ -147,6 +160,15 @@ public class Weapon : MonoBehaviour {
             shootSound = smg.GetComponent<AudioSource>();
             UpdateUI();
         }
+    }
+
+    // If the knife is swinging to hurt the enemy
+    public bool GetSwinging() {
+        return shooting && curWeapon == weapons.melee;
+    }
+
+    public void StopSwinging() {
+        shooting = false;
     }
 
     void GunReloading(int i) {

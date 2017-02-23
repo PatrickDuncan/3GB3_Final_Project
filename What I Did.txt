@@ -16,3 +16,5 @@
 - Shooting is now continuous
 - Added reload sounds
 - Created waves of enemies
+- You can now use the knife!
+- Improved the behavior of the enemies

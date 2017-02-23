@@ -21,6 +21,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
     Transform myTransform;
     Transform playerTrans;
     WaveLogic waveLogic;
+    Weapon plyrWeapon;
 
     void Awake() {
         health = 200;
@@ -34,29 +35,29 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
         playerTrans = GameObject.FindWithTag("Player").transform;
         anim.SetTrigger(walk);
         waveLogic = GameObject.FindWithTag("Wave Logic").GetComponent<WaveLogic>();
+        plyrWeapon = GameObject.FindWithTag("MainCamera").GetComponent<Weapon>();
 	}
 
     void FixedUpdate() {
         if (health < 1 || DontUpdate()) return;
         if (!charging)
             ChasePlayer();
-        if (!waitToAttack && (FacingPlayer() || charging)) {
+        if (!waitToAttack && (FacingPlayer(true) || charging)) {
             Charge();
         }
     }
 
     void OnCollisionEnter(Collision col) {
-        if (health < 1) return;
-        string tag = col.gameObject.tag;
-        CheckCollisions(tag);
-
+        if (health < 1)
+            return;
+        CheckCollisions(col.gameObject.tag);
         Death();
     }
 
     void OnTriggerEnter(Collider col) {
         if (col.gameObject.tag == "AirBlast") {
             GetComponent<Rigidbody>().AddForce(
-                col.gameObject.transform.forward * 100,
+                col.gameObject.transform.forward * 200,
                 ForceMode.Impulse
             );
         }
@@ -87,31 +88,31 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
     void CheckCollisions(string tag) {
         switch(tag) {
             case "Door":
+            case "Enemy":
             case "Wall":
                 StartCoroutine(WaitToAttack());
                 anim.SetTrigger(walk);
                 GetComponent<AudioSource>().Stop();
                 break;
             case "PistolBullet":
-                health -= 15;
-                if (health > 0) // fixes async issue with death animation
-                    anim.SetTrigger(attacking ? run : walk);
+                Damaged(15);
                 break;
             case "ShotgunBullet":
-                health -= 40;
                 anim.SetTrigger(hurt);  // only the shotgun makes it flinch
-                if (health > 0) // fixes async issue with death animation
-                    anim.SetTrigger(attacking ? run : walk);
+                Damaged(40);
                 break;
             case "SMGBullet":
-                health -= 8;
-                if (health > 0) // fixes async issue with death animation
-                    anim.SetTrigger(attacking ? run : walk);
+                Damaged(10);
                 break;
             case "Player":
-                if (playerCollisions > 0)
-                    attacking = false;
-                ++playerCollisions;
+                if (plyrWeapon.GetSwinging()) {
+                    Damaged(10);
+                    plyrWeapon.StopSwinging();
+                    if (!waitToAttack)
+                        anim.SetTrigger(hurt);
+                } else {
+                    HitPlayer();
+                }
                 break;
 		}
     }
@@ -145,17 +146,31 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
             return true;
     }
 
-    bool FacingPlayer() {
+    bool FacingPlayer(bool toCharge) {
         // http://answers.unity3d.com/questions/503934/chow-to-check-if-an-object-is-facing-another.html
         float rotationDiff = Vector3.Dot(
             myTransform.forward,
             (playerTrans.position - myTransform.position).normalized
         );
-        return rotationDiff > 0.99;
+        return rotationDiff > (toCharge ? 0.99 : 0.8);
     }
 
     public bool GetAttacking() {
         return attacking;
+    }
+
+    void Damaged(int dmg) {
+        health -= dmg;
+        if (health > 0) // fixes async issue with death animation
+            anim.SetTrigger(attacking ? run : walk);
+    }
+
+    void HitPlayer() {
+        if (!FacingPlayer(false))    // can only hurt if facing the player
+            return;
+        if (playerCollisions > 0)
+            attacking = false;
+        ++playerCollisions;
     }
 
     IEnumerator WaitToAttack() {

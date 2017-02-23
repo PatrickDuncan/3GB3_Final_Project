@@ -17,6 +17,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
 	int die;
     const float MAXVELOCITY = 12f;
     const float TURNSPEED = 2f;
+    const float CAN_DAMAGE = 1f;
     const float WAIT_ATTACK = 3.5f;
 
     Animator anim;
@@ -24,6 +25,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     Transform myTransform;
     Transform playerTrans;
     WaveLogic waveLogic;
+    Weapon plyrWeapon;
 
     void Awake() {
         walking = true;
@@ -40,6 +42,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         myTransform = transform;
         playerTrans = GameObject.FindWithTag("Player").transform;
         waveLogic = GameObject.FindWithTag("Wave Logic").GetComponent<WaveLogic>();
+        plyrWeapon = GameObject.FindWithTag("MainCamera").GetComponent<Weapon>();
 	}
 
     void FixedUpdate() {
@@ -57,16 +60,15 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     }
 
     void OnCollisionEnter(Collision col) {
-        if (health < 1) return;
-        string tag = col.gameObject.tag;
-
-        CheckCollisions(tag);
+        if (health < 1)
+            return;
+        CheckCollisions(col.gameObject.tag);
     }
 
     void OnTriggerEnter(Collider col) {
         if (col.gameObject.tag == "AirBlast") {
             GetComponent<Rigidbody>().AddForce(
-                col.gameObject.transform.forward * 1000,
+                col.gameObject.transform.forward * 1100,
                 ForceMode.Impulse
             );
         }
@@ -108,14 +110,19 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
                     anim.SetTrigger(hurt);
                 break;
             case "SMGBullet":
-                health -= 10;
+                health -= 13;
                 if (!waitToAttack)
                     anim.SetTrigger(hurt);
                 break;
             case "Player":
-                if (playerCollisions > 0)
-                    attacking = false;
-                ++playerCollisions;
+                if (plyrWeapon.GetSwinging()) {
+                    health -= 10;
+                    plyrWeapon.StopSwinging();
+                    if (!waitToAttack)
+                        anim.SetTrigger(hurt);
+                } else {
+                    HitPlayer();
+                }
                 break;
         }
         Death();
@@ -154,6 +161,14 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
             return true;
     }
 
+    bool FacingPlayer() {
+        // http://answers.unity3d.com/questions/503934/chow-to-check-if-an-object-is-facing-another.html
+        return Vector3.Dot(
+            myTransform.forward,
+            (playerTrans.position - myTransform.position).normalized
+        ) > 0.8;
+    }
+
     // If close enough to the player to attack and looking at the player
     bool AttackConditions() {
         bool closeEnough = Math.Sqrt(
@@ -161,23 +176,27 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
             +
             Math.Pow(myTransform.position.z - playerTrans.position.z, 2)
         ) < 16;
-        // http://answers.unity3d.com/questions/503934/chow-to-check-if-an-object-is-facing-another.html
-        float rotationDiff = Vector3.Dot(
-            myTransform.forward,
-            (playerTrans.position - myTransform.position).normalized
-        );
-        return closeEnough && rotationDiff > 0.8;
+        return closeEnough && FacingPlayer();
     }
 
     public bool GetAttacking() {
         return attacking;
     }
 
+    void HitPlayer() {
+        if (!FacingPlayer())    // can only hurt if facing the player
+            return;
+        if (playerCollisions > 0)
+            attacking = false;
+        ++playerCollisions;
+    }
+
     IEnumerator WaitToAttack() {
         attacking = true;
         waitToAttack = true;
+        yield return new WaitForSeconds(CAN_DAMAGE);
+        attacking = false;
         yield return new WaitForSeconds(WAIT_ATTACK);
-     	attacking = false;
      	waitToAttack = false;
         playerCollisions = 0;
     }
