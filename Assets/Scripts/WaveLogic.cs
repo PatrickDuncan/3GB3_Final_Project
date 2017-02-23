@@ -52,7 +52,7 @@ public class WaveLogic : MonoBehaviour {
     public void EnemyKilled() {
         --waveCounter[currentWave];
         // next wave and there are more levels
-        if (waveCounter[currentWave] == 0 && currentWave < 0) {
+        if (waveCounter[currentWave] == 0 && currentWave < 3) {
             StartCoroutine(WaveStartText());
             UpdateUI();
         }
