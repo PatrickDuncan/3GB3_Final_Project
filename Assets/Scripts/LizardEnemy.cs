@@ -23,6 +23,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     public AudioClip dead;
     Transform myTransform;
     Transform playerTrans;
+    WaveLogic waveLogic;
 
     void Awake() {
         walking = true;
@@ -38,6 +39,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
         anim.SetTrigger(walk);
         myTransform = transform;
         playerTrans = GameObject.FindWithTag("Player").transform;
+        waveLogic = GameObject.FindWithTag("Wave Logic").GetComponent<WaveLogic>();
 	}
 
     void FixedUpdate() {
@@ -129,6 +131,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
             gameObject.layer = 2;
             walking = false;
             attacking = false;
+            waveLogic.EnemyKilled();
         }
     }
 

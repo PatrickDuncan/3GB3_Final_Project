@@ -3,7 +3,6 @@ using UnityEngine;
 public class Door : MonoBehaviour {
 
     bool colliding = false;
-	bool keyPressed = false;
 	bool open = false;
 
     Transform myTransform;

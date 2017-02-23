@@ -7,7 +7,6 @@ public class Bullet : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision col) {
-		if (col.gameObject.tag != "Player")
-        	Destroy(gameObject);    // auto destroy on impact
+        Destroy(gameObject);    // auto destroy on impact
 	}
 }

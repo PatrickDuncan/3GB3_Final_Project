@@ -20,6 +20,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
     public AudioClip dead;
     Transform myTransform;
     Transform playerTrans;
+    WaveLogic waveLogic;
 
     void Awake() {
         health = 200;
@@ -32,6 +33,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
         myTransform = transform;
         playerTrans = GameObject.FindWithTag("Player").transform;
         anim.SetTrigger(walk);
+        waveLogic = GameObject.FindWithTag("Wave Logic").GetComponent<WaveLogic>();
 	}
 
     void FixedUpdate() {
@@ -125,6 +127,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
             gameObject.layer = 2;
             attacking = false;
             charging = false;
+            waveLogic.EnemyKilled();
         }
     }
 

@@ -15,3 +15,4 @@
 - Added a shooting animation for the SMG
 - Shooting is now continuous
 - Added reload sounds
+- Created waves of enemies
