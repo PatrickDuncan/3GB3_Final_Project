@@ -88,7 +88,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
     void CheckCollisions(string tag) {
         switch(tag) {
             case "Door":
-            case "Enemy":
+            case "LizardEnemy":
             case "Wall":
                 StartCoroutine(WaitToAttack());
                 anim.SetTrigger(walk);
