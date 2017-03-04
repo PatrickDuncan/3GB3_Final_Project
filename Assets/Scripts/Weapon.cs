@@ -163,6 +163,11 @@ public class Weapon : MonoBehaviour {
         }
     }
 
+    public void AmmoPickup() {
+        for (int i = 0; i < ammo_ammounts.Length; ++i)
+            ammo_ammounts[i] += CLIP_SIZES[i];
+    }
+
     // If the knife is swinging to hurt the enemy
     public bool GetSwinging() {
         return shooting && curWeapon == weapons.melee;

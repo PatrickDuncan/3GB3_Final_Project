@@ -62,6 +62,12 @@ public class PlayerHealth : MonoBehaviour {
 		DeathCheck();
 	}
 
+	public void HealthPickup() {
+		health = health + 10 < 100
+			? health + 10
+			: 100;
+	}
+
 	void UpdateUI() {
 		GameObject.FindWithTag("HP").GetComponent<Text>().text = health > 0
 			? health.ToString() + " ❤"
