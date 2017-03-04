@@ -68,7 +68,7 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
     void OnTriggerEnter(Collider col) {
         if (col.gameObject.tag == "AirBlast") {
             GetComponent<Rigidbody>().AddForce(
-                col.gameObject.transform.forward * 1100,
+                col.gameObject.transform.forward * 1500,
                 ForceMode.Impulse
             );
         }

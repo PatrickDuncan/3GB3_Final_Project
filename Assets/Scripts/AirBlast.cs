@@ -7,7 +7,7 @@ public class AirBlast : MonoBehaviour {
 
     bool allowedToShoot = true;
     int blastAnim;
-    const float DISPPEAR_TIME = 0.8f;
+    const float DISPPEAR_TIME = 0.7f;
     const float WAIT_TIME = 5f;
 
     Animator anim;
@@ -21,7 +21,8 @@ public class AirBlast : MonoBehaviour {
     }
 
     void Update() {
-        if (!allowedToShoot) return;
+        if (!allowedToShoot)
+            return;
         // If the key is pressed create a game object (wall) and then add a velocity
         if (Input.GetKeyDown(KeyCode.Mouse1)) {
             anim.SetTrigger(blastAnim);

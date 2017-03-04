@@ -55,11 +55,9 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
     }
 
     void OnTriggerEnter(Collider col) {
-        if (col.gameObject.tag == "AirBlast") {
-            GetComponent<Rigidbody>().AddForce(
-                col.gameObject.transform.forward * 200,
-                ForceMode.Impulse
-            );
+        // Stop the charge if hit with air blast from the front
+        if (col.gameObject.tag == "AirBlast" && FacingPlayer(false)) {
+            CheckCollisions("Wall");
         }
     }
 
@@ -71,8 +69,8 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
             GetComponent<AudioSource>().Play();
         }
         Rigidbody rigid = GetComponent<Rigidbody>();
-        if (rigid.velocity.sqrMagnitude < 500f) {
-            rigid.AddForce(myTransform.forward * 1400, ForceMode.Impulse);
+        if (rigid.velocity.sqrMagnitude < 600f) {
+            rigid.AddForce(myTransform.forward * 1500, ForceMode.Impulse);
         }
     }
 
