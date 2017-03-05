@@ -11,6 +11,7 @@ public class HealthPickup : MonoBehaviour {
     void OnTriggerEnter(Collider col) {
         if (col.gameObject.tag == "Player") {
             playerHealth.HealthPickup();
+            GameObject.FindWithTag("Health Sound").GetComponent<AudioSource>().Play();
             Destroy(gameObject);    // auto destroy on impact
         }
 	}

@@ -11,6 +11,7 @@ public class AmmoPickup : MonoBehaviour {
     void OnTriggerEnter(Collider col) {
         if (col.gameObject.tag == "Player") {
             weapon.AmmoPickup();
+            GameObject.FindWithTag("Ammo Sound").GetComponent<AudioSource>().Play();
             Destroy(gameObject);    // auto destroy on impact
         }
 	}

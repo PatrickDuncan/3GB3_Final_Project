@@ -13,11 +13,13 @@ public class AirBlast : MonoBehaviour {
     Animator anim;
     AudioSource shootSound;
     public GameObject airWall;
+    Transform myTransform;
 
     void Start() {
         anim = GameObject.FindWithTag("AirPushHand").GetComponent<Animator>();
         blastAnim = Animator.StringToHash("Push");
         shootSound = GameObject.FindWithTag("AirBlastOrigin").GetComponent<AudioSource>();
+        myTransform = transform;
     }
 
     void Update() {
@@ -26,13 +28,23 @@ public class AirBlast : MonoBehaviour {
         // If the key is pressed create a game object (wall) and then add a velocity
         if (Input.GetKeyDown(KeyCode.Mouse1)) {
             anim.SetTrigger(blastAnim);
-            Vector3 position = GameObject.FindWithTag("AirBlastOrigin").transform.position;
-            Quaternion rotation = GameObject.FindWithTag("MainCamera").transform.rotation;
-            GameObject gO = Instantiate(airWall, position, rotation) as GameObject;
-			gO.GetComponent<Rigidbody>().AddForce(transform.forward * 500000);
-
+            // Air blast in front of you
+            if (myTransform.rotation.eulerAngles.x < 65) {
+                Vector3 position = GameObject.FindWithTag("AirBlastOrigin").transform.position;
+                Quaternion rotation = GameObject.FindWithTag("MainCamera").transform.rotation;
+                GameObject gO = Instantiate(airWall, position, rotation) as GameObject;
+    			gO.GetComponent<Rigidbody>().AddForce(myTransform.forward * 500000);
+                Destroy(gO, DISPPEAR_TIME);
+            }
+            // air blast jump
+            else {
+                Rigidbody rb = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
+                rb.drag = 0f;
+                // force doesnt register when grounded
+                rb.velocity = new Vector3(rb.velocity.x, 1f, rb.velocity.z);
+                rb.AddForce(new Vector3(0f, 400, 0f), ForceMode.Impulse);
+            }
             shootSound.Play();
-            Destroy(gO, DISPPEAR_TIME);
             StartCoroutine(WaitToShoot());
 		}
     }
