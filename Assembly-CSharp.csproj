@@ -131,6 +131,7 @@
      <Compile Include="Assets\Scripts\BreakTube.cs" />
      <Compile Include="Assets\Scripts\Bullet.cs" />
      <Compile Include="Assets\Scripts\Door.cs" />
+     <Compile Include="Assets\Scripts\Flashlight.cs" />
      <Compile Include="Assets\Scripts\HealthPickup.cs" />
      <Compile Include="Assets\Scripts\IEnemy.cs" />
      <Compile Include="Assets\Scripts\LizardEnemy.cs" />

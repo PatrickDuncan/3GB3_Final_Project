@@ -29,7 +29,7 @@ public class AirBlast : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Mouse1)) {
             anim.SetTrigger(blastAnim);
             // Air blast in front of you
-            if (myTransform.rotation.eulerAngles.x < 65) {
+            if (myTransform.rotation.eulerAngles.x < 60) {
                 Vector3 position = GameObject.FindWithTag("AirBlastOrigin").transform.position;
                 Quaternion rotation = GameObject.FindWithTag("MainCamera").transform.rotation;
                 GameObject gO = Instantiate(airWall, position, rotation) as GameObject;

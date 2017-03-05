@@ -13,7 +13,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
 	int walk;
     int playerCollisions;
     const float MAXVELOCITY = 10f;
-    const float TURNSPEED = 0.8f;
+    const float TURNSPEED = 0.9f;
     const float WAIT_ATTACK = 3f;
 
     Animator anim;
@@ -39,11 +39,14 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
 	}
 
     void FixedUpdate() {
+        Vector3 oldRot = transform.rotation.eulerAngles;
         if (health < 1 || DontUpdate()) return;
-        if (!charging)
+        if (!charging && GetComponent<Rigidbody>().velocity.sqrMagnitude < 10) {
             ChasePlayer();
+        }
         if (!waitToAttack && (FacingPlayer(true) || charging)) {
             Charge();
+            transform.rotation = Quaternion.Euler(0, oldRot.y, 0);
         }
     }
 
@@ -62,13 +65,15 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
     }
 
     void Charge() {
-        if (!attacking && !charging && !waitToAttack) {
+        Rigidbody rigid = GetComponent<Rigidbody>();
+        if (!attacking && !charging && !waitToAttack) { // start charging
+            rigid.velocity = new Vector3(0, 0, 0);
+            myTransform.rotation = Quaternion.Euler(new Vector3(0, myTransform.rotation.eulerAngles.y, 0));
             attacking = true;
             charging = true;
             anim.SetTrigger(run);
             GetComponent<AudioSource>().Play();
         }
-        Rigidbody rigid = GetComponent<Rigidbody>();
         if (rigid.velocity.sqrMagnitude < 700f) {
             rigid.AddForce(myTransform.forward * 1600, ForceMode.Impulse);
         }
@@ -150,7 +155,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
             myTransform.forward,
             (playerTrans.position - myTransform.position).normalized
         );
-        return rotationDiff > (toCharge ? 0.99 : 0.8);
+        return rotationDiff > (toCharge ? 0.999 : 0.8);
     }
 
     public bool GetAttacking() {
