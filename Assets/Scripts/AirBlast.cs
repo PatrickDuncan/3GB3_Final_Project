@@ -8,7 +8,7 @@ public class AirBlast : MonoBehaviour {
     bool allowedToShoot = true;
     int blastAnim;
     const float DISPPEAR_TIME = 0.7f;
-    const float WAIT_TIME = 5f;
+    const float WAIT_TIME = 8f;
 
     Animator anim;
     AudioSource shootSound;

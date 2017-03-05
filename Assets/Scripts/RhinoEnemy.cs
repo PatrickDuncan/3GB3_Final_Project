@@ -14,7 +14,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
     int playerCollisions;
     const float MAXVELOCITY = 10f;
     const float TURNSPEED = 0.8f;
-    const float WAIT_ATTACK = 6f;
+    const float WAIT_ATTACK = 3f;
 
     Animator anim;
     public AudioClip dead;
@@ -69,8 +69,8 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
             GetComponent<AudioSource>().Play();
         }
         Rigidbody rigid = GetComponent<Rigidbody>();
-        if (rigid.velocity.sqrMagnitude < 600f) {
-            rigid.AddForce(myTransform.forward * 1500, ForceMode.Impulse);
+        if (rigid.velocity.sqrMagnitude < 700f) {
+            rigid.AddForce(myTransform.forward * 1600, ForceMode.Impulse);
         }
     }
 
