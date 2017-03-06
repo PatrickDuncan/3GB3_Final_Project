@@ -155,7 +155,7 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
             myTransform.forward,
             (playerTrans.position - myTransform.position).normalized
         );
-        return rotationDiff > (toCharge ? 0.997 : 0.8);
+        return rotationDiff > (toCharge ? 0.9925 : 0.8);
     }
 
     public bool GetAttacking() {
