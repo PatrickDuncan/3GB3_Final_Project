@@ -14,6 +14,7 @@ public class WaveLogic : MonoBehaviour {
     GameObject[] wave2;
     GameObject[] wave3;
     GameObject[] wave4;
+    Music music;
 
     void Start() {
         won = false;
@@ -44,6 +45,8 @@ public class WaveLogic : MonoBehaviour {
         waveCounter[3] = wave4[index].GetComponentsInChildren(typeof(AudioSource)).Length;
 
         gameStart = GameObject.FindWithTag("Wave Start");
+
+        music = GameObject.FindWithTag("Music").GetComponent<Music>();
 
         StartCoroutine(WaveStartText());
         UpdateUI();
@@ -78,6 +81,7 @@ public class WaveLogic : MonoBehaviour {
 
     IEnumerator WaveStartText() {
         ++currentWave;
+        music.LowerPitch();
         string text = "Wave " + (currentWave + 1) + " Start";
         gameStart.GetComponent<Text>().text = text;
         gameStart.SetActive(true);
