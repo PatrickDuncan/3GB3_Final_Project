@@ -17,10 +17,11 @@ public class Music : MonoBehaviour {
 
 	public void PlayPressed() {
 		GetComponent<AudioSource>().Pause();
-		GetComponent<AudioSource>().volume = 0.15f;
+		GetComponent<AudioSource>().volume = 0.20f;
 	}
 
 	public void LowerPitch() {
-        GetComponent<AudioSource>().pitch -= 0.2f;
+        GetComponent<AudioSource>().pitch -= 0.075f;
+		GetComponent<AudioSource>().volume += 0.05f;
     }
 }
