@@ -138,6 +138,7 @@
      <Compile Include="Assets\Scripts\LizardEnemy.cs" />
      <Compile Include="Assets\Scripts\MouseLook.cs" />
      <Compile Include="Assets\Scripts\Music.cs" />
+     <Compile Include="Assets\Scripts\Pause.cs" />
      <Compile Include="Assets\Scripts\PlayerHealth.cs" />
      <Compile Include="Assets\Scripts\RhinoEnemy.cs" />
      <Compile Include="Assets\Scripts\RigidbodyFirstPersonController.cs" />

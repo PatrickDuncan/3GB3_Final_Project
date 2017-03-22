@@ -5,15 +5,21 @@ public class Buttons : MonoBehaviour {
 
     bool inMainMenu = true;
 
+    Music music;
+
+    public void Start() {
+        music = GameObject.FindWithTag("Music").GetComponent<Music>();
+    }
+
     public void Play() {
         if (inMainMenu) {	// Stops player from press Start multiple times and creating clones of all the gameobjects
 			inMainMenu = false;
+            music.PlayPressed();
 			Invoke("NextScene", 1f);
 		}
 	}
 
     void NextScene() {
-//        showPanels.ToggleLoading(true);
         SceneManager.LoadScene(1);
     }
 
