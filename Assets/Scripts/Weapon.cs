@@ -57,7 +57,7 @@ public class Weapon : MonoBehaviour {
         GameObject.FindWithTag("Ammo").GetComponent<Text>().text = " 1 / " + ammo_ammounts[1] + " ";
     }
 
-    void Update() {
+    void FixedUpdate() {
         if (shooting || playerHealth.GetHealth() < 1 || reloading[(int) curWeapon]
             || waveLogic.Won() || waitToSwing)
             return;

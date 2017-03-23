@@ -22,7 +22,7 @@ public class AirBlast : MonoBehaviour {
         myTransform = transform;
     }
 
-    void Update() {
+    void FixedUpdate() {
         if (!allowedToShoot)
             return;
         // If the key is pressed create a game object (wall) and then add a velocity
