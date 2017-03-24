@@ -74,9 +74,9 @@ public class WaveLogic : MonoBehaviour {
             Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
 			GameObject.FindWithTag("Music").GetComponent<Music>().FullVolume();
+			GameObject.FindWithTag("Music").GetComponent<Music>().HighPitch();
 
             foreach (GameObject gO in buttons) {
-                Debug.Log(gO.name);
                 if (gO.name != "Death")
                     gO.SetActive(true);
             }

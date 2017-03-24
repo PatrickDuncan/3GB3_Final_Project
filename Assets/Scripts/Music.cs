@@ -20,6 +20,10 @@ public class Music : MonoBehaviour {
 		GetComponent<AudioSource>().volume += 0.05f;
     }
 
+	public void HighPitch() {
+        GetComponent<AudioSource>().pitch = 1.1f;
+    }
+
 	void OnLevelChanged(Scene oldScene, Scene newScene) {
 		GetComponent<AudioSource>().UnPause();
 	}
