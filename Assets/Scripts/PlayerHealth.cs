@@ -8,7 +8,7 @@ public class PlayerHealth : MonoBehaviour {
 	GameObject[] death;
  	WaveLogic waveLogic;
 
-	void Awake() {
+	void Start() {
 		health = 100;
 		GameObject.FindWithTag("HP").GetComponent<Text>().text = health.ToString() + " ❤";
 		death = GameObject.FindGameObjectsWithTag("DeathScreen");

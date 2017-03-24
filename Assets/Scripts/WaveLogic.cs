@@ -14,7 +14,12 @@ public class WaveLogic : MonoBehaviour {
     GameObject[] wave2;
     GameObject[] wave3;
     GameObject[] wave4;
+    GameObject[] buttons;
     Music music;
+
+    void Awake() {
+        buttons = GameObject.FindGameObjectsWithTag("DeathScreen");
+    }
 
     void Start() {
         won = false;
@@ -65,6 +70,16 @@ public class WaveLogic : MonoBehaviour {
             GameObject.FindWithTag("Wave").GetComponent<Text>().text = "0 Remaining";
             gameStart.GetComponent<Text>().text = "You Survived";
             gameStart.SetActive(true);
+
+            Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+			GameObject.FindWithTag("Music").GetComponent<Music>().FullVolume();
+
+            foreach (GameObject gO in buttons) {
+                Debug.Log(gO.name);
+                if (gO.name != "Death")
+                    gO.SetActive(true);
+            }
         } else {
             UpdateUI();
         }
