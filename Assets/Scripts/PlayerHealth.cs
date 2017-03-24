@@ -36,6 +36,10 @@ public class PlayerHealth : MonoBehaviour {
 		if (health < 1 || waveLogic.Won()) {
 			foreach (GameObject gO in death)
 				gO.SetActive(true);
+
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+			GameObject.FindWithTag("Music").GetComponent<Music>().FullVolume();
 		}
 	}
 

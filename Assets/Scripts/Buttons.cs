@@ -23,6 +23,11 @@ public class Buttons : MonoBehaviour {
         SceneManager.LoadScene(1);
     }
 
+    public void Restart() {
+        GameObject.FindWithTag("Music").GetComponent<Music>().Restart();
+        NextScene();
+    }
+
     public void Quit() {
 		#if UNITY_STANDALONE
 			Application.Quit();

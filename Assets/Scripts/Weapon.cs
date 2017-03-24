@@ -5,12 +5,12 @@ using System.Collections;
 
 public class Weapon : MonoBehaviour {
 
-    bool shooting = false;
-    bool waitToSwing = false;
-    bool[] reloading = {false, false, false, false};
+    bool shooting;
+    bool waitToSwing;
+    bool[] reloading = new bool[4];
     int[] CLIP_SIZES = {8, 1, 15};
     int[] clip_sizes = new int[3];
-    int[] ammo_ammounts = {70, 40, 195};   // the amount of bullet is this + clip_sizes
+    int[] ammo_ammounts = new int[3];   // the amount of bullet is this + clip_sizes
     float[] WAIT_TIMES = {1f, 0.3f, 1.6f, 0.075f};
 
     Animator anim;
@@ -37,6 +37,14 @@ public class Weapon : MonoBehaviour {
     weapons curWeapon;
 
     void Start() {
+        shooting = false;
+        waitToSwing = false;
+        for (int i = 0; i < reloading.Length; ++i)
+            reloading[i] = false;
+        ammo_ammounts[0] = 70;
+        ammo_ammounts[1] = 40;
+        ammo_ammounts[2] = 195;
+
         myTransform = transform;
         curWeapon = weapons.shotgun;
         melee = GameObject.FindWithTag("Knife");
