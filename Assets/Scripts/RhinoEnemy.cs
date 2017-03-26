@@ -74,8 +74,8 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
             anim.SetTrigger(run);
             GetComponent<AudioSource>().Play();
         }
-        if (rigid.velocity.sqrMagnitude < 700f) {
-            rigid.AddForce(myTransform.forward * 1600, ForceMode.Impulse);
+        if (rigid.velocity.sqrMagnitude < 800f) {
+            rigid.AddForce(myTransform.forward * 1700, ForceMode.Impulse);
         }
     }
 
