@@ -137,7 +137,8 @@ public class RhinoEnemy : MonoBehaviour, IEnemy {
 
     bool DontUpdate() {
         RaycastHit hit;
-        int layer_mask = ~(1 << gameObject.layer);  // bit shift then invert
+        // ignore other enemies if they're dead or alive
+        int layer_mask = ~(1 << gameObject.layer | 1 << 2);  // bit shift then invert
         Vector3 fixedPlayerPos = new Vector3(
             playerTrans.position.x,
             playerTrans.position.y + 3f,

@@ -144,7 +144,8 @@ public class LizardEnemy : MonoBehaviour, IEnemy {
 
     bool DontUpdate() {
         RaycastHit hit;
-        int layer_mask = ~(1 << gameObject.layer);  // bit shift then invert
+        // ignore other enemies if they're dead or alive
+        int layer_mask = ~(1 << gameObject.layer | 1 << 2);  // bit shift then invert
         Vector3 fixedSelf = new Vector3(
             myTransform.position.x,
             myTransform.position.y + 1f,
