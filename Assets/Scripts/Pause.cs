@@ -7,15 +7,20 @@ public class Pause : MonoBehaviour {
     AudioSource[] allAudioSources;		// All audio sources in the scene.
     GameObject pauseText;
     PlayerHealth playerH;
+    WaveLogic waveLogic;
 
     void Start() {
         pauseText = GameObject.FindWithTag("PauseText");
         pauseText.SetActive(false);
         playerH = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
+        waveLogic = GameObject.FindWithTag("Wave Logic").GetComponent<WaveLogic>();
     }
 
 	void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape) && playerH.GetHealth() > 0) {
+        // Hit escape key, not dead and hasn't won
+        if (Input.GetKeyDown(KeyCode.Escape)
+        && playerH.GetHealth() > 0
+        && !waveLogic.Won()) {
             if (paused) Unpause();
             else        DoPause();
             paused = !paused;
