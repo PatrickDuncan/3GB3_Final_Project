@@ -24,6 +24,7 @@ public class Buttons : MonoBehaviour {
     }
 
     public void Restart() {
+        Time.timeScale = 1;
         GameObject.FindWithTag("Music").GetComponent<Music>().Restart();
         NextScene();
     }

@@ -6,8 +6,13 @@ public class Pause : MonoBehaviour {
 
     AudioSource[] allAudioSources;		// All audio sources in the scene.
     GameObject pauseText;
+    GameObject[] buttons;
     PlayerHealth playerH;
     WaveLogic waveLogic;
+
+    void Awake() {
+        buttons = GameObject.FindGameObjectsWithTag("DeathScreen");
+    }
 
     void Start() {
         pauseText = GameObject.FindWithTag("PauseText");
@@ -33,6 +38,13 @@ public class Pause : MonoBehaviour {
 		foreach (AudioSource sound in allAudioSources) {
 			sound.Pause();
 		}
+		foreach (GameObject gO in buttons) {
+            Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+			if (gO.name != "Death") {
+                gO.SetActive(true);
+            }
+		}
         pauseText.SetActive(true);
     }
 
@@ -40,6 +52,13 @@ public class Pause : MonoBehaviour {
         Time.timeScale = 1;
 		foreach (AudioSource sound in allAudioSources) {
 			sound.UnPause();
+		}
+        foreach (GameObject gO in buttons) {
+            Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
+			if (gO.name != "Death") {
+                gO.SetActive(false);
+            }
 		}
         pauseText.SetActive(false);
     }
