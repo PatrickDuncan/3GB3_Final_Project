@@ -6,14 +6,16 @@ public class Pause : MonoBehaviour {
 
     AudioSource[] allAudioSources;		// All audio sources in the scene.
     GameObject pauseText;
+    PlayerHealth playerH;
 
     void Start() {
         pauseText = GameObject.FindWithTag("PauseText");
         pauseText.SetActive(false);
+        playerH = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
     }
 
 	void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetKeyDown(KeyCode.Escape) && playerH.GetHealth() > 0) {
             if (paused) Unpause();
             else        DoPause();
             paused = !paused;
