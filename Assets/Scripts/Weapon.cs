@@ -41,9 +41,9 @@ public class Weapon : MonoBehaviour {
         waitToSwing = false;
         for (int i = 0; i < reloading.Length; ++i)
             reloading[i] = false;
-        ammo_ammounts[0] = 70;
-        ammo_ammounts[1] = 40;
-        ammo_ammounts[2] = 195;
+        ammo_ammounts[0] = 60;
+        ammo_ammounts[1] = 30;
+        ammo_ammounts[2] = 180;
 
         myTransform = transform;
         curWeapon = weapons.shotgun;
