@@ -40,7 +40,7 @@ public class PlayerHealth : MonoBehaviour {
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
 			GameObject.FindWithTag("Music").GetComponent<Music>().FullVolume();
-			Debug.Log("Game over!!! Enduardo!");	// 5% bonus :)
+			Debug.Log("Game over!!! Endurdo!");	// 5% bonus :)
 		}
 	}
 
