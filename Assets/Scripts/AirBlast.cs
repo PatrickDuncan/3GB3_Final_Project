@@ -29,7 +29,7 @@ public class AirBlast : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Mouse1)) {
             anim.SetTrigger(blastAnim);
             float x = myTransform.rotation.eulerAngles.x;
-            if (x < 90 && x > 60) AirJump();
+            if (x < 92 && x > 60) AirJump();
             else                  AirPush();
             shootSound.Play();
             StartCoroutine(WaitToShoot());
