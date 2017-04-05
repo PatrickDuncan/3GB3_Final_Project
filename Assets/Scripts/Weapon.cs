@@ -62,8 +62,8 @@ public class Weapon : MonoBehaviour {
         anim = shotgun.GetComponent<Animator>();
         bullet.tag = "ShotgunBullet";
         clip_sizes[0] = CLIP_SIZES[0];
-        clip_sizes[1] = 0;
-        clip_sizes[2] = 0;
+        clip_sizes[1] = CLIP_SIZES[1];
+        clip_sizes[2] = CLIP_SIZES[2];
         GameObject.FindWithTag("Ammo").GetComponent<Text>().text = " 1 / " + ammo_ammounts[1] + " ";
         UpdateUI();
     }
