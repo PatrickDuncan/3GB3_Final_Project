@@ -62,9 +62,10 @@ public class Weapon : MonoBehaviour {
         anim = shotgun.GetComponent<Animator>();
         bullet.tag = "ShotgunBullet";
         clip_sizes[0] = CLIP_SIZES[0];
-        clip_sizes[1] = CLIP_SIZES[1];
-        clip_sizes[2] = CLIP_SIZES[2];
+        clip_sizes[1] = 0;
+        clip_sizes[2] = 0;
         GameObject.FindWithTag("Ammo").GetComponent<Text>().text = " 1 / " + ammo_ammounts[1] + " ";
+        UpdateUI();
     }
 
     void FixedUpdate() {
@@ -174,8 +175,16 @@ public class Weapon : MonoBehaviour {
     }
 
     public void AmmoPickup() {
-        for (int i = 0; i < ammo_ammounts.Length; ++i)
+        for (int i = 0; i < ammo_ammounts.Length; ++i) {
             ammo_ammounts[i] += CLIP_SIZES[i];
+            // fixes case for if the gun is empty
+            if (clip_sizes[i] == 0 && (int) curWeapon == i) // if holding, animate
+                GunReloading(i);
+            else if (clip_sizes[i] == 0) {
+                clip_sizes[i] = CLIP_SIZES[i];
+                ammo_ammounts[i] = 0;
+            }
+        }
         UpdateUI();
     }
 
@@ -192,7 +201,7 @@ public class Weapon : MonoBehaviour {
         --clip_sizes[i];
         UpdateUI();
         // Reload the gun
-        if (clip_sizes[i] == 0 && ammo_ammounts[i] > 0) {
+        if (clip_sizes[i] <= 0 && ammo_ammounts[i] > 0) {
             if (curWeapon != weapons.smg) {
                 anim.SetTrigger("Reload");
                 if (curWeapon == weapons.pistol) {
