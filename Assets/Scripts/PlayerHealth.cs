@@ -71,6 +71,7 @@ public class PlayerHealth : MonoBehaviour {
 		health = health + 10 < 100
 			? health + 10
 			: 100;
+		UpdateUI();
 	}
 
 	void UpdateUI() {

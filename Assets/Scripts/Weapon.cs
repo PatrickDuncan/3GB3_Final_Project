@@ -176,6 +176,7 @@ public class Weapon : MonoBehaviour {
     public void AmmoPickup() {
         for (int i = 0; i < ammo_ammounts.Length; ++i)
             ammo_ammounts[i] += CLIP_SIZES[i];
+        UpdateUI();
     }
 
     // If the knife is swinging to hurt the enemy
